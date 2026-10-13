@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StegoShield AI | Interactive Image Steganography Suite</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Animated Canvas -->
+    <canvas id="bgCanvas" class="bg-canvas"></canvas>
+
+    <!-- Confetti Canvas for Celebrations -->
+    <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+    <!-- Top Header -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="logo-group">
+                <div class="logo-icon-pulse">
+                    <span class="logo-icon">🛡️</span>
+                    <span class="pulse-ring"></span>
+                </div>
+                <div>
+                    <div class="brand-row">
+                        <h1 class="logo-title">StegoShield AI</h1>
+                        <span class="version-tag">PRO v2.0</span>
+                    </div>
+                    <p class="logo-subtitle">Key-Seeded LSB Matching & Robust 8x8 DCT with Reed-Solomon ECC</p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button id="sfxToggleBtn" class="header-btn sfx-btn" title="Toggle Cyber Audio FX">
+                    <span id="sfxIcon">🔊</span> <span class="btn-text">Audio: ON</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Floating Interactive Mascot: StegoBot -->
+    <aside class="mascot-container" id="stegoBotMascot" title="Click me to chat!">
+        <div class="mascot-speech-bubble" id="mascotBubble">
+            <span id="mascotText">👋 Hi! I'm <strong>StegoBot</strong>, your stego sidekick! Drop an image or pick a mode to get started!</span>
+            <div class="bubble-arrow"></div>
+        </div>
+        <div class="mascot-body-wrapper">
+            <!-- Animated SVG Robot Mascot -->
+            <svg class="mascot-svg" viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg">
+                <!-- Antenna -->
+                <line x1="60" y1="28" x2="60" y2="10" stroke="#60a5fa" stroke-width="4" stroke-linecap="round"/>
+                <circle cx="60" cy="8" r="7" fill="#3b82f6" class="antenna-glow"/>
+                <circle cx="60" cy="8" r="3" fill="#93c5fd"/>
+                <!-- Head -->
+                <rect x="25" y="28" width="70" height="52" rx="16" fill="#1e293b" stroke="#3b82f6" stroke-width="3"/>
+                <!-- Screen Face -->
+                <rect x="32" y="36" width="56" height="36" rx="10" fill="#090d16" stroke="#1d4ed8" stroke-width="1.5"/>
+                <!-- Eyes (Animated) -->
+                <g class="mascot-eyes">
+                    <circle cx="48" cy="52" r="7" fill="#60a5fa" class="robot-eye"/>
+                    <circle cx="72" cy="52" r="7" fill="#60a5fa" class="robot-eye"/>
+                    <circle cx="50" cy="50" r="2.5" fill="#ffffff"/>
+                    <circle cx="74" cy="50" r="2.5" fill="#ffffff"/>
+                </g>
+                <!-- Mouth / Waveform -->
+                <path d="M 48 64 Q 60 70 72 64" fill="transparent" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" class="robot-mouth"/>
+                <!-- Body -->
+                <rect x="34" y="83" width="52" height="42" rx="12" fill="#1e293b" stroke="#3b82f6" stroke-width="3"/>
+                <!-- Core Badge (Glowing Shield) -->
+                <polygon points="60,93 72,99 72,111 60,119 48,111 48,99" fill="#2563eb" class="core-shield"/>
+                <polygon points="60,97 68,101 68,109 60,115 52,109 52,101" fill="#60a5fa"/>
+                <!-- Left Hand -->
+                <rect x="16" y="88" width="14" height="26" rx="7" fill="#1e293b" stroke="#3b82f6" stroke-width="2" class="left-arm"/>
+                <!-- Right Hand (Waving) -->
+                <g class="right-arm-wave">
+                    <rect x="90" y="82" width="14" height="26" rx="7" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+                </g>
+            </svg>
+            <div class="mascot-shadow"></div>
+        </div>
+    </aside>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs" id="mainTabs">
+            <button class="tab-btn active" data-tab="embed-tab">
+                <span class="tab-icon">📥</span> 1. Embed Secret
+            </button>
+            <button class="tab-btn" data-tab="extract-tab">
+                <span class="tab-icon">📤</span> 2. Extract & Decrypt
+            </button>
+            <button class="tab-btn" data-tab="jpeg-tab">
+                <span class="tab-icon">⚡</span> 3. JPEG Resilience Lab
+            </button>
+            <button class="tab-btn" data-tab="steganalysis-tab">
+                <span class="tab-icon">🔬</span> 4. Steganalysis (χ² & RS)
+            </button>
+            <button class="tab-btn" data-tab="benchmark-tab">
+                <span class="tab-icon">📊</span> 5. Benchmark & Evaluation
+            </button>
+        </nav>
+
+        <!-- TAB 1: EMBED SECRET -->
+        <section id="embed-tab" class="tab-content active">
+            <div class="card-grid">
+                <!-- Embedding Form -->
+                <div class="glass-card">
+                    <div class="card-header-styled">
+                        <div class="header-icon-box">🔒</div>
+                        <div>
+                            <h2 class="card-title">Embed & Encrypt Secret Payload</h2>
+                            <p class="card-desc">Conceal confidential messages within images with authenticated AES-256-GCM.</p>
+                        </div>
+                    </div>
+                    
+                    <form id="embedForm">
+                        <div class="form-group">
+                            <label class="form-label">Cover Image (PNG / JPG / BMP)</label>
+                            <div class="upload-dropzone animated-dropzone" id="embedDropzone">
+                                <input type="file" id="embedCoverInput" accept="image/*" class="file-input" required>
+                                <div class="dropzone-text">
+                                    <div class="upload-art-icon">🖼️</div>
+                                    <span class="dropzone-prompt">Drag & Drop cover image or <span class="highlight-link">Browse</span></span>
+                                    <span class="file-name" id="embedCoverName"></span>
+                                </div>
+                            </div>
+                            <!-- Live Capacity Indicator -->
+                            <div id="capacityInfo" class="capacity-info hidden">
+                                <div class="capacity-badge pulse-badge">
+                                    <span class="badge-label">Dimensions:</span> <strong id="capDims">-</strong>
+                                </div>
+                                <div class="capacity-badge">
+                                    <span class="badge-label">LSB Matching Cap:</span> <strong id="capMatch">-</strong>
+                                </div>
+                                <div class="capacity-badge">
+                                    <span class="badge-label">Robust DCT Cap:</span> <strong id="capDct">-</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cartoon Algorithm Selector Cards -->
+                        <div class="form-group">
+                            <label class="form-label">Choose Algorithm Strategy</label>
+                            <div class="algo-cards-grid">
+                                <div class="algo-card active" data-algo="matching">
+                                    <div class="algo-badge">PROPOSED</div>
+                                    <div class="algo-icon">🥷</div>
+                                    <div class="algo-title">Pixel Ninja (LSB Matching)</div>
+                                    <div class="algo-desc">Key-seeded random shuffle with ±1 perturbation. Evades Chi-Square & RS tests!</div>
+                                </div>
+                                <div class="algo-card" data-algo="dct">
+                                    <div class="algo-badge">ROBUST</div>
+                                    <div class="algo-icon">🛡️</div>
+                                    <div class="algo-title">Iron Fortress (8x8 DCT + ECC)</div>
+                                    <div class="algo-desc">Frequency QIM with Reed-Solomon Error Correction. Survives lossy JPEG!</div>
+                                </div>
+                                <div class="algo-card" data-algo="sequential">
+                                    <div class="algo-badge baseline">BASELINE</div>
+                                    <div class="algo-icon">⚙️</div>
+                                    <div class="algo-title">Clockwork LSB (Sequential)</div>
+                                    <div class="algo-desc">Linear raster substitution for direct academic benchmark comparison.</div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="embedMethod" value="matching">
+                            <div class="method-hint" id="methodHint">
+                                ℹ️ <em>Key-Seeded LSB Matching:</em> Disperses bits randomly across pixels using a key-derived PRNG seed, and perturbs pixel intensities by ±1 rather than direct replacement, preventing Pairs-of-Values equalization and evading Chi-Square / RS steganalysis.
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Secret Message</label>
+                            <textarea id="embedMessage" class="form-textarea" rows="3" placeholder="Enter confidential message to hide inside the image..." required></textarea>
+                            <div class="char-count"><span id="msgByteCount">0</span> bytes payload</div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label class="form-label">AES-GCM Password Key</label>
+                                <input type="password" id="embedPassword" class="form-input" placeholder="Strong secret password..." required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Save Format</label>
+                                <select id="embedFormat" class="form-select">
+                                    <option value="png" selected>Lossless PNG (Recommended)</option>
+                                    <option value="jpeg">Lossy JPEG (For DCT Mode)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-glow" id="embedSubmitBtn">
+                            <span>✨ Embed Secret Message</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Embedding Results -->
+                <div class="glass-card" id="embedResultCard">
+                    <div class="card-header-styled">
+                        <div class="header-icon-box accent">🔍</div>
+                        <div>
+                            <h2 class="card-title">Embedding Inspection & Fidelity</h2>
+                            <p class="card-desc">Real-time metrics, scanning HUD, and interactive before/after split slider.</p>
+                        </div>
+                    </div>
+
+                    <div id="embedPlaceholder" class="empty-state">
+                        <div class="empty-animated-robot">🤖</div>
+                        <p>Upload a cover image and click embed to view interactive inspection, PSNR/SSIM, and downloadable stego image.</p>
+                    </div>
+
+                    <div id="embedResultDetails" class="hidden">
+                        <!-- Metrics Badges with Animated Counters -->
+                        <div class="metrics-grid">
+                            <div class="metric-box">
+                                <div class="metric-title">PSNR Fidelity</div>
+                                <div class="metric-value text-accent" id="resPsnr">- dB</div>
+                            </div>
+                            <div class="metric-box">
+                                <div class="metric-title">SSIM Similarity</div>
+                                <div class="metric-value text-success" id="resSsim">-</div>
+                            </div>
+                            <div class="metric-box">
+                                <div class="metric-title">MSE Error</div>
+                                <div class="metric-value" id="resMse">-</div>
+                            </div>
+                            <div class="metric-box">
+                                <div class="metric-title">Embed Time</div>
+                                <div class="metric-value" id="resTime">- ms</div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Split Comparison Slider -->
+                        <div class="split-slider-container" id="splitSliderContainer">
+                            <div class="scan-laser-line" id="scanLaser"></div>
+                            <div class="split-img-box split-cover">
+                                <img id="coverPreview" src="" alt="Cover" class="split-img">
+                                <span class="split-label left">Original Cover</span>
+                            </div>
+                            <div class="split-img-box split-stego" id="stegoSplitLayer">
+                                <img id="stegoPreview" src="" alt="Stego" class="split-img">
+                                <span class="split-label right">Stego Image</span>
+                            </div>
+                            <div class="split-handle" id="splitHandle">
+                                <div class="handle-line"></div>
+                                <div class="handle-knob">↔</div>
+                            </div>
+                        </div>
+                        <div class="slider-tip-text">Drag slider ↔ to visually compare Cover vs Stego pixel-by-pixel</div>
+
+                        <!-- Interactive Bit-Plane X-Ray Canvas -->
+                        <div class="bitplane-controls">
+                            <button type="button" class="btn btn-secondary btn-sm" id="toggleBitplaneBtn">
+                                🔬 View LSB Plane (X-Ray Mode)
+                            </button>
+                        </div>
+                        <div id="bitplaneWrapper" class="bitplane-box hidden">
+                            <div class="bitplane-header">
+                                <span>LSB (0th Bit) Plane X-Ray:</span>
+                                <small id="bitplaneNote">Random noise confirms statistical concealment!</small>
+                            </div>
+                            <canvas id="bitplaneCanvas" class="bitplane-canvas"></canvas>
+                        </div>
+
+                        <div class="action-buttons mt-3">
+                            <a id="downloadStegoLink" href="#" download class="btn btn-success btn-glow">
+                                ⬇️ Download Stego Image
+                            </a>
+                            <button id="sendToExtractBtn" class="btn btn-secondary">
+                                ➡️ Test in Extract Tab
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: EXTRACT SECRET -->
+        <section id="extract-tab" class="tab-content">
+            <div class="card-grid">
+                <div class="glass-card">
+                    <div class="card-header-styled">
+                        <div class="header-icon-box">🔓</div>
+                        <div>
+                            <h2 class="card-title">Extract & Authenticate Payload</h2>
+                            <p class="card-desc">AES-256-GCM verification ensures tampered files trigger explicit alerts.</p>
+                        </div>
+                    </div>
+                    
+                    <form id="extractForm">
+                        <div class="form-group">
+                            <label class="form-label">Stego Image</label>
+                            <div class="upload-dropzone animated-dropzone" id="extractDropzone">
+                                <input type="file" id="extractImageInput" accept="image/*" class="file-input" required>
+                                <div class="dropzone-text">
+                                    <div class="upload-art-icon">🔎</div>
+                                    <span class="dropzone-prompt">Drag & Drop stego image or <span class="highlight-link">Browse</span></span>
+                                    <span class="file-name" id="extractImageName"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Extraction Method</label>
+                            <select id="extractMethod" class="form-select">
+                                <option value="auto" selected>✨ Auto-Detect (Test Implemented Pipelines)</option>
+                                <option value="matching">🥷 Proposed: Key-Seeded LSB Matching</option>
+                                <option value="dct">🛡️ Proposed: Robust DCT + Reed-Solomon</option>
+                                <option value="sequential">⚙️ Baseline: Sequential LSB</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Decryption Password</label>
+                            <input type="password" id="extractPassword" class="form-input" placeholder="Enter password used during embedding..." required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-glow" id="extractSubmitBtn">
+                            <span>🔓 Extract & Decrypt Secret</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="glass-card">
+                    <div class="card-header-styled">
+                        <div class="header-icon-box success">✉️</div>
+                        <div>
+                            <h2 class="card-title">Recovered Plaintext Payload</h2>
+                            <p class="card-desc">Cryptographically authenticated message recovered from image carrier.</p>
+                        </div>
+                    </div>
+
+                    <div id="extractPlaceholder" class="empty-state">
+                        <div class="empty-animated-robot">🔐</div>
+                        <p>Upload a stego image and enter the passphrase to authenticate and extract the confidential payload.</p>
+                    </div>
+
+                    <div id="extractResultDetails" class="hidden">
+                        <div class="status-banner success-banner pulse-border">
+                            <span class="banner-icon">🎉</span>
+                            <div>
+                                <strong id="extractMethodBadge">Proposed Key-Seeded LSB Matching</strong>
+                                <div>Decryption & AES-GCM Integrity Tag Verified! (Extracted in <span id="extractTime">-</span> ms)</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <label class="form-label">Recovered Secret Message:</label>
+                            <div class="recovered-box" id="extractedMessageText"></div>
+                        </div>
+
+                        <div class="meta-row">
+                            <span>Payload Length: <strong id="extractedLength">-</strong> bytes</span>
+                            <button id="copyExtractedBtn" class="btn btn-sm btn-secondary">📋 Copy Text</button>
+                        </div>
+                    </div>
+
+                    <div id="extractErrorDetails" class="hidden">
+                        <div class="status-banner error-banner">
+                            <span class="banner-icon">⚠️</span>
+                            <div>
+                                <strong>Decryption / Extraction Failed</strong>
+                                <div id="extractErrorMsg">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: JPEG RESILIENCE LAB -->
+        <section id="jpeg-tab" class="tab-content">
+            <div class="glass-card">
+                <div class="card-header-styled">
+                    <div class="header-icon-box warning">🌪️</div>
+                    <div>
+                        <h2 class="card-title">JPEG Compression Resilience Experiment</h2>
+                        <p class="card-desc">
+                            Test the core hypothesis: Spatial LSB gets destroyed by lossy JPEG quantization, while our proposed <strong>Robust 8x8 DCT with Reed-Solomon ECC</strong> survives with 0% error!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="lab-controls">
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label class="form-label">Cover Image</label>
+                            <input type="file" id="jpegLabCover" accept="image/*" class="form-input">
+                        </div>
+                        <div class="form-group flex-1">
+                            <label class="form-label">Secret Test Payload</label>
+                            <input type="text" id="jpegLabMessage" value="Confidential IEEE Paper Test Message 2026!" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input type="password" id="jpegLabPassword" value="RobustSecret123" class="form-input">
+                        </div>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header-flex">
+                            <label class="form-label">JPEG Quality Factor (Q):</label>
+                            <div class="slider-badge" id="jpegQBadge">Q = <strong id="jpegQVal">80</strong></div>
+                        </div>
+                        <input type="range" id="jpegQSlider" min="20" max="95" value="80" class="form-slider">
+                        <div class="slider-ticks">
+                            <span>Q=20 (Severe Loss)</span>
+                            <span>Q=50 (Medium)</span>
+                            <span>Q=80 (Standard Web)</span>
+                            <span>Q=95 (High Quality)</span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-accent btn-glow mt-3" id="runJpegLabBtn">
+                        ⚡ Run JPEG Recompression Resilience Test
+                    </button>
+                </div>
+
+                <!-- Results Table -->
+                <div id="jpegLabResults" class="mt-4 hidden">
+                    <h3 class="subsection-title">Experimental Resilience Outcome at Q=<span id="reportQ">80</span></h3>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Steganography Algorithm</th>
+                                    <th>Domain</th>
+                                    <th>JPEG Recompression Status</th>
+                                    <th>Error / Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody id="jpegLabTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: STEGANALYSIS LAB (CHI-SQUARE & RS) -->
+        <section id="steganalysis-tab" class="tab-content">
+            <div class="glass-card">
+                <div class="card-header-styled">
+                    <div class="header-icon-box danger">🕵️</div>
+                    <div>
+                        <h2 class="card-title">Statistical Steganalysis Attack Suite</h2>
+                        <p class="card-desc">
+                            Execute literature attacks: <strong>Westfeld & Pfitzmann Chi-Square (χ²) Analysis</strong> and <strong>Fridrich RS Steganalysis</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label class="form-label">Select Image to Analyze (Cover or Stego)</label>
+                        <input type="file" id="steganalysisInput" accept="image/*" class="form-input">
+                    </div>
+                    <div class="form-group align-end">
+                        <button class="btn btn-primary btn-glow" id="runSteganalysisBtn">
+                            🔬 Execute χ² and RS Steganalysis
+                        </button>
+                    </div>
+                </div>
+
+                <div id="steganalysisResults" class="mt-4 hidden">
+                    <div class="card-grid">
+                        <!-- Chi Square Card -->
+                        <div class="metric-card hover-glow">
+                            <h3 class="metric-card-title">Chi-Square (χ²) PoV Steganalysis</h3>
+                            <div class="verdict-banner" id="chiVerdictBanner">
+                                <span id="chiVerdictIcon">🔍</span> <span id="chiVerdictText">-</span>
+                            </div>
+                            <div class="metric-list">
+                                <div class="metric-item">
+                                    <span>χ² Statistic:</span> <strong id="chiStat">-</strong>
+                                </div>
+                                <div class="metric-item">
+                                    <span>Degrees of Freedom (df):</span> <strong id="chiDf">-</strong>
+                                </div>
+                                <div class="metric-item">
+                                    <span>p-value (Survival Function):</span> <strong id="chiPval">-</strong>
+                                </div>
+                                <div class="metric-item">
+                                    <span>Stego Probability:</span> <strong id="chiProb">-</strong>
+                                </div>
+                            </div>
+                            <p class="metric-explanation">
+                                <em>Scientific Principle:</em> Sequential LSB replacement artificially equalizes even-odd pairs of values (PoVs), pushing p-value towards 1.0. Key-Seeded LSB Matching (+1/-1) preserves natural differences, leaving p-value low.
+                            </p>
+                        </div>
+
+                        <!-- RS Steganalysis Card -->
+                        <div class="metric-card hover-glow">
+                            <h3 class="metric-card-title">Fridrich RS (Regular/Singular) Steganalysis</h3>
+                            <div class="verdict-banner" id="rsVerdictBanner">
+                                <span id="rsVerdictIcon">🔍</span> <span id="rsVerdictText">-</span>
+                            </div>
+                            <div class="metric-list">
+                                <div class="metric-item">
+                                    <span>Rm / R-m:</span> <strong><span id="rsRm">-</span> / <span id="rsRneg">-</span></strong>
+                                </div>
+                                <div class="metric-item">
+                                    <span>Sm / S-m:</span> <strong><span id="rsSm">-</span> / <span id="rsSneg">-</span></strong>
+                                </div>
+                                <div class="metric-item">
+                                    <span>Asymmetry ΔR = |Rm - R-m|:</span> <strong id="rsDeltaR">-</strong>
+                                </div>
+                                <div class="metric-item">
+                                    <span>Estimated Payload Rate (α):</span> <strong id="rsPayload">-</strong>
+                                </div>
+                            </div>
+                            <p class="metric-explanation">
+                                <em>Scientific Principle:</em> Clean images exhibit symmetry between positive and negative flipping masks (Rm ≈ R-m). LSB replacement breaks this symmetry. LSB Matching preserves it.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: BENCHMARK & EVALUATION -->
+        <section id="benchmark-tab" class="tab-content">
+            <div class="glass-card">
+                <div class="card-header-styled">
+                    <div class="header-icon-box accent">📈</div>
+                    <div>
+                        <h2 class="card-title">Comparative Benchmark & Report Suite</h2>
+                        <p class="card-desc">
+                            Generates full academic evaluation tables comparing Baseline Sequential LSB vs Proposed Key-Seeded LSB Matching vs Proposed Robust DCT across payloads and JPEG quality factors.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label class="form-label">Cover Image for Test Matrix</label>
+                        <input type="file" id="benchCoverInput" accept="image/*" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Payload Size</label>
+                        <select id="benchPayloadSize" class="form-select">
+                            <option value="32">Small Payload (32 Bytes)</option>
+                            <option value="64" selected>Medium Payload (64 Bytes)</option>
+                            <option value="128">Large Payload (128 Bytes)</option>
+                        </select>
+                    </div>
+                    <div class="form-group align-end">
+                        <button class="btn btn-primary btn-glow" id="runBenchmarkBtn">
+                            📊 Run Comprehensive Benchmark
+                        </button>
+                    </div>
+                </div>
+
+                <div id="benchResults" class="mt-4 hidden">
+                    <div class="bench-header-row">
+                        <h3 class="subsection-title">Measured Academic Results</h3>
+                        <a id="downloadBenchCsv" href="#" download class="btn btn-secondary btn-sm">
+                            📥 Export CSV Report
+                        </a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="benchTable">
+                            <thead>
+                                <tr>
+                                    <th>Method</th>
+                                    <th>Channel Condition</th>
+                                    <th>Payload</th>
+                                    <th>Embed (ms)</th>
+                                    <th>Extract (ms)</th>
+                                    <th>PSNR (dB)</th>
+                                    <th>SSIM</th>
+                                    <th>χ² Stat</th>
+                                    <th>RS ΔR</th>
+                                    <th>Recovered?</th>
+                                    <th>BER</th>
+                                </tr>
+                            </thead>
+                            <tbody id="benchTableBody">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>Image Steganography System | Based on Key-Seeded LSB Matching (+1/-1) and DCT-Domain Embedding with AES-GCM</p>
+        <p class="footer-ref">References: Aljughaiman & Alrawashdeh (2026), Sci. Rep.; Joshi & Bhand (2026), arXiv:2603.18105.</p>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

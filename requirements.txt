@@ -1,0 +1,9 @@
+Flask>=3.0.0
+Pillow>=10.0.0
+numpy>=1.26.0
+opencv-python>=4.8.0
+cryptography>=42.0.0
+reedsolo>=1.7.0
+scipy>=1.12.0
+pandas>=2.0.0
+matplotlib>=3.8.0

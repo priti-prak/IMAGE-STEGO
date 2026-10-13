@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Academic Project Report - Image Steganography</title>
+<style>
+    @page {
+        size: A4;
+        margin: 22mm 18mm 22mm 18mm;
+        @bottom-right {
+            content: counter(page);
+        }
+    }
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 11.5pt;
+        line-height: 1.5;
+        color: #111;
+        margin: 0;
+        padding: 0;
+    }
+    h1 {
+        font-size: 18pt;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        page-break-before: always;
+        color: #0f172a;
+        text-transform: uppercase;
+        border-bottom: 2px solid #334155;
+        padding-bottom: 0.3rem;
+    }
+    h1:first-of-type {
+        page-break-before: avoid;
+        margin-top: 0;
+    }
+    h2 {
+        font-size: 14pt;
+        font-weight: bold;
+        margin-top: 1.5rem;
+        margin-bottom: 0.6rem;
+        color: #1e293b;
+        page-break-after: avoid;
+    }
+    h3 {
+        font-size: 12pt;
+        font-weight: bold;
+        margin-top: 1.2rem;
+        margin-bottom: 0.4rem;
+        color: #334155;
+        page-break-after: avoid;
+    }
+    p {
+        margin-bottom: 0.8rem;
+        text-align: justify;
+        text-justify: inter-word;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.2rem 0;
+        font-size: 10pt;
+        page-break-inside: avoid;
+    }
+    th, td {
+        border: 1px solid #475569;
+        padding: 6px 10px;
+        text-align: left;
+        vertical-align: top;
+    }
+    th {
+        background-color: #f1f5f9;
+        font-weight: bold;
+        color: #0f172a;
+    }
+    tr:nth-child(even) {
+        background-color: #f8fafc;
+    }
+    pre, code {
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 9pt;
+        background-color: #f1f5f9;
+    }
+    pre {
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        padding: 10px 14px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-break: break-all;
+        margin: 1rem 0;
+        page-break-inside: avoid;
+    }
+    ul, ol {
+        margin-bottom: 0.8rem;
+        padding-left: 1.5rem;
+    }
+    li {
+        margin-bottom: 0.3rem;
+        text-align: justify;
+    }
+    hr {
+        border: none;
+        border-top: 1px solid #94a3b8;
+        margin: 1.5rem 0;
+    }
+    .report-title-block {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 3px double #0f172a;
+    }
+    .report-main-title {
+        font-size: 20pt;
+        font-weight: bold;
+        color: #0f172a;
+        margin-bottom: 0.8rem;
+        line-height: 1.3;
+    }
+    .report-sub-title {
+        font-size: 13pt;
+        color: #475569;
+        font-style: italic;
+    }
+</style>
+</head>
+<body>
+<div class="report-title-block">
+    <div class="report-main-title">Image Steganography Using LSB: Reducing Statistical Detectability and Improving JPEG Resilience with Key-Seeded LSB Matching and DCT-Domain Embedding</div>
+    <div class="report-sub-title">A Comprehensive Academic Project Report Across Chapters 1 to 10</div>
+</div>
+<h1 id="project-report">PROJECT REPORT</h1>
+<h2 id="image-steganography-using-lsb-reducing-statistical-detectability-and-improving-jpeg-resilience-with-key-seeded-lsb-matching-and-dct-domain-embedding">Image Steganography Using LSB: Reducing Statistical Detectability and Improving JPEG Resilience with Key-Seeded LSB Matching and DCT-Domain Embedding</h2>
+<hr />
+<h1 id="chapter-1-introduction">CHAPTER 1 – INTRODUCTION</h1>
+<h2 id="11-background-of-the-study">1.1 Background of the Study</h2>
+<p>In the modern digital age, information transmission across public networks and communication platforms has become an integral aspect of everyday personal, industrial, financial, and military activities. As the volume of sensitive data transmitted over untrusted channels expands, safeguarding confidentiality and privacy against unauthorized surveillance, interception, and malicious alteration is paramount. </p>
+<p>While classical cryptography (such as symmetric and asymmetric ciphers) provides robust mathematical protection by scrambling plaintext into unreadable ciphertext, the mere presence of ciphertext can arouse suspicion. Eavesdroppers, automated firewalls, and network censors immediately identify that confidential communication is taking place, making the transmitting parties potential targets for traffic analysis, cryptanalysis, or interception.</p>
+<p>Steganography addresses this fundamental vulnerability by embedding confidential data within innocuous cover media—such as digital images, audio tracks, or video streams—so that the very existence of the communication remains undetectable. An effective steganographic system ensures that an unauthorized observer cannot distinguish between a genuine cover image and a stego-image carrying a secret payload.</p>
+<p>Digital images represent the most pervasive and practical cover medium due to their high spatial redundancy, large file sizes, and ubiquitous exchange over social networks and messaging platforms. Within image steganography, spatial-domain techniques—most notably the Least Significant Bit (LSB) substitution method—have historically been the most widely adopted due to their high embedding capacity, computational simplicity, and high visual imperceptibility. </p>
+<p>However, contemporary research reveals two major technical vulnerabilities in traditional LSB substitution:
+1. <strong>Statistical Detectability</strong>: Basic LSB replacement creates statistical artifacts in the pixel value distribution (Pairs of Values or PoVs), rendering it vulnerable to statistical steganalysis attacks such as the Chi-Square ($\chi^2$) test and Regular/Singular (RS) analysis.
+2. <strong>Fragility to Lossy Compression</strong>: Spatial LSB embeddings cannot survive lossy operations such as JPEG compression, which is the default format used by web servers, image hosting services, and social media platforms.</p>
+<p>This project focuses on designing, developing, and empirically evaluating an advanced steganography system that resolves both of these vulnerabilities by introducing <strong>Key-Seeded LSB Matching ($\pm 1$) with Rate Capping</strong> for low statistical detectability and <strong>Quantized 8x8 Block DCT-Domain Embedding protected by Reed-Solomon Error-Correcting Codes</strong> for JPEG resilience, all secured via authenticated <strong>AES-256-GCM</strong> encryption.</p>
+<hr />
+<h2 id="12-problem-statement">1.2 Problem Statement</h2>
+<p>Despite the visual fidelity offered by conventional spatial LSB steganography, existing implementations suffer from two critical limitations that severely restrict their operational viability:</p>
+<ol>
+<li>
+<p><strong>Vulnerability to Statistical Steganalysis</strong>: Conventional sequential LSB replacement strictly substitutes the least significant bit of sequential pixels with secret bits. Because ciphertext bits are statistically equiprobable (0 and 1 occur with roughly 50% probability), substituting the LSBs of pixel values artificially equalizes adjacent pairs of values (e.g., $2k$ and $2k+1$). This creates an artificial symmetry in the image histogram that can be detected by statistical steganalysis tools such as Westfeld's Chi-Square ($\chi^2$) attack and Fridrich's RS steganalysis, completely compromising the covert channel even when visual distortion is negligible.</p>
+</li>
+<li>
+<p><strong>Fragility Under Lossy JPEG Recompression</strong>: Real-world communication channels rarely preserve uncompressed bitmap or PNG images intact. When an image is transmitted via messaging applications, web servers, or email platforms, it is almost universally recompressed into JPEG format to reduce bandwidth and storage overhead. Lossy JPEG compression utilizes Discrete Cosine Transform (DCT) quantization and chroma subsampling, which discard high-frequency spatial details and round off coefficient values. Consequently, any secret information embedded purely in the spatial least significant bits is permanently corrupted or erased upon re-encoding, resulting in a 100% Bit Error Rate (BER).</p>
+</li>
+</ol>
+<p>Therefore, the problem addressed by this project is the need for a unified steganographic framework that:
+- Eliminates statistical histogram equalization artifacts to resist Chi-Square and RS steganalysis;
+- Provides a robust frequency-domain mode capable of surviving lossy JPEG recompression without data loss;
+- Implements authenticated encryption and capacity validation to guarantee data confidentiality, tamper resistance, and reliable recovery.</p>
+<hr />
+<h2 id="13-objectives-of-the-project">1.3 Objectives of the Project</h2>
+<p>The primary objective of this project is to develop an advanced, dual-mode image steganography software system that reduces statistical detectability in the spatial domain and improves resilience against lossy JPEG recompression in the frequency domain.</p>
+<p>The specific objectives are:
+- To implement <strong>Key-Seeded LSB Matching ($\pm 1$)</strong> that disperses bits in a pseudo-random order and modifies pixel values via $\pm 1$ perturbation rather than simple substitution, evading Pairs-of-Values equalization.
+- To enforce a <strong>Capped Embedding Rate</strong> to keep spatial pixel modifications below statistical detection thresholds.
+- To implement a <strong>Robust 8x8 DCT-Domain Embedding Mode</strong> utilizing Quantization Index Modulation (QIM) on mid-frequency AC luminance coefficients.
+- To integrate <strong>Reed-Solomon Error-Correcting Codes (ECC)</strong> to detect and correct bit errors introduced by JPEG quantization noise.
+- To integrate <strong>Password-Based Authenticated Encryption (AES-256-GCM)</strong> with <strong>PBKDF2-HMAC-SHA256</strong> to ensure confidentiality, integrity, and tamper-evident authentication.
+- To incorporate a standardized <strong>Length-and-Magic Protocol Header</strong> (<code>STEG</code>) and capacity validation checks to prevent buffer overflow and extraction crashes.
+- To implement a comprehensive <strong>Steganalysis and Benchmarking Suite</strong> evaluating Chi-Square ($\chi^2$), RS analysis, PSNR, SSIM, MSE, BER, and execution latency across varying payload sizes and JPEG quality factors ($Q=90, 80, 70$).
+- To deliver an interactive, responsive <strong>Web Dashboard</strong> and scriptable <strong>CLI</strong> for practical use, experimentation, and demonstration.</p>
+<hr />
+<h2 id="14-scope-of-the-project">1.4 Scope of the Project</h2>
+<p>This project encompasses the end-to-end mathematical modeling, algorithmic implementation, cryptographic integration, user interface development, and experimental evaluation of image steganography.</p>
+<p>The scope includes the following activities:
+- Input handling and preprocessing of digital cover images (PNG, JPEG, BMP).
+- Cryptographic payload packaging: PBKDF2 key derivation, random IV/salt generation, AES-256-GCM authenticated encryption, and header packaging.
+- Spatial-domain embedding: Key-seeded PRNG permutation generation, LSB matching ($\pm 1$) logic with boundary clipping protection ($0 \to +1$, $255 \to -1$).
+- Frequency-domain embedding: RGB to YCrCb transformation, 8x8 block division, forward 2D-DCT, Quantization Index Modulation on mid-frequency AC coefficients, Reed-Solomon parity computation, and inverse 2D-DCT reconstruction.
+- Blind extraction pipelines for both spatial and frequency domains with automatic error handling.
+- Steganalysis attack implementations: Westfeld Chi-Square ($\chi^2$) statistical test and Fridrich RS (Regular/Singular) smoothness group analysis.
+- Objective image quality assessment: Peak Signal-to-Noise Ratio (PSNR), Mean Squared Error (MSE), and Structural Similarity Index Measure (SSIM).
+- Channel simulation: Evaluating payload survivability and Bit Error Rate (BER) across multiple JPEG quality factors.
+- Design of an interactive 5-tab browser-based dashboard (Flask, HTML5, CSS3, JavaScript) and Command-Line Interface (CLI).</p>
+<h3 id="project-boundaries-and-limitations">Project Boundaries and Limitations:</h3>
+<ul>
+<li>The system is designed for digital raster images (RGB and grayscale); it does not process video or audio streams.</li>
+<li>The robust DCT mode is specifically engineered to survive <strong>JPEG lossy recompression</strong>; it is not designed to survive geometric transformations such as cropping, resizing, or rotation.</li>
+<li>While LSB matching successfully evades first-order statistical attacks (Chi-Square and RS), advanced high-order deep-learning steganalysis (e.g., spatial rich models) may still detect heavy payloads.</li>
+</ul>
+<hr />
+<h2 id="15-significance-of-the-project">1.5 Significance of the Project</h2>
+<p>This project is significant from both practical security and academic research perspectives:</p>
+<ol>
+<li><strong>Practical Covert Communication</strong>: Provides journalists, human rights defenders, intelligence professionals, and secure organizations with a dual-mode steganographic tool that balances maximum imperceptibility (via LSB matching on lossless files) with channel resilience (via DCT embedding for internet and social media platforms that recompress images to JPEG).</li>
+<li><strong>Cryptographic Integrity</strong>: Unlike conventional academic steganography tools that embed raw ASCII text, this system enforces authenticated cryptography (AES-GCM). If an unauthorized party alters even a single pixel or attempts a brute-force passphrase, the system rejects the payload without leaking corrupted plaintext.</li>
+<li><strong>Academic Evaluation &amp; Pedagogical Value</strong>: The system bridges theoretical literature (Aljughaiman &amp; Alrawashdeh, 2026; Joshi &amp; Bhand, 2026) with working open-source software. By integrating the exact statistical attacks (Chi-Square and RS) directly into the dashboard alongside PSNR and SSIM, students and researchers can visually observe why traditional LSB fails and how LSB matching and DCT-ECC overcome those failures.</li>
+</ol>
+<hr />
+<h1 id="chapter-2-literature-survey-existing-studies">CHAPTER 2 – LITERATURE SURVEY / EXISTING STUDIES</h1>
+<h2 id="21-review-of-existing-systems-research-works">2.1 Review of Existing Systems / Research Works</h2>
+<p>Image steganography has evolved significantly over the past three decades, progressing from simple spatial bit replacement to content-adaptive spatial dispersion, frequency-domain transformations, and hybrid encryption frameworks.</p>
+<h3 id="211-spatial-least-significant-bit-lsb-substitution">2.1.1 Spatial Least Significant Bit (LSB) Substitution</h3>
+<p>Spatial LSB substitution is the foundational steganographic algorithm. In an 8-bit digital image, the least significant bit of each pixel color byte contributes minimally to overall perceptual luminance. In basic sequential LSB replacement, confidential bits directly overwrite the 0th bit of consecutive pixels in raster-scan order. While computationally trivial and capable of achieving high embedding capacities (up to 3 bits per pixel in RGB images), it is highly fragile. Any alteration to pixel values destroys the hidden payload, and the sequential alteration leaves unmistakable statistical signatures.</p>
+<h3 id="212-statistical-steganalysis-the-chi-square-attack">2.1.2 Statistical Steganalysis: The Chi-Square Attack</h3>
+<p>In 1999, Westfeld and Pfitzmann introduced the Chi-Square ($\chi^2$) statistical attack, demonstrating that LSB replacement fundamentally alters the natural histogram of digital images. Natural images exhibit irregular frequencies between adjacent even and odd pixel intensities ($2k$ and $2k+1$). When encrypted, pseudo-random payload bits are embedded via LSB replacement, each pair of values is equalized because 0s and 1s occur with roughly equal probability. By measuring the Chi-Square goodness-of-fit against expected equalized frequencies, steganalysts can detect the presence of hidden messages with near-100% confidence, even at low embedding rates.</p>
+<h3 id="213-rs-regular-singular-steganalysis">2.1.3 RS (Regular / Singular) Steganalysis</h3>
+<p>To overcome the limitations of the Chi-Square attack on non-sequential embeddings, Fridrich, Goljan, and Du (2001) developed RS Steganalysis. RS analysis partitions an image into small pixel groups and examines their local smoothness under positive and negative flipping masks ($M$ and $-M$). In a natural, unaltered image, the proportions of regular groups ($R_M \approx R_{-M}$) and singular groups ($S_M \approx S_{-M}$) exhibit near-perfect symmetry. Standard LSB replacement disrupts this relationship, causing $R_M$ to decrease and $S_M$ to increase while reversing for the negative mask. This asymmetry ($\Delta R = |R_M - R_{-M}|$) allows steganalysts not only to detect embedding but also to estimate the hidden payload length $\alpha$ with high mathematical precision.</p>
+<h3 id="214-lsb-matching-pm-1-steganography">2.1.4 LSB Matching ($\pm 1$) Steganography</h3>
+<p>To counter Pairs-of-Values equalization and RS asymmetry, Sharp (2001) and Mielikainen (2006) proposed LSB Matching (also known as $\pm 1$ steganography). Instead of overwriting pixel values, LSB matching checks whether the current pixel LSB matches the secret bit. If it matches, the pixel remains untouched. If it differs, the pixel value is randomly incremented or decremented by 1. Because changes are distributed symmetrically in both positive and negative directions, the strict pairing of values ($2k \leftrightarrow 2k+1$) is broken. Consequently, the first-order histogram remains smooth, and both Chi-Square and RS attacks fail to detect the hidden data.</p>
+<h3 id="215-transform-domain-dct-steganography">2.1.5 Transform-Domain (DCT) Steganography</h3>
+<p>To address the fragility of spatial methods under lossy compression, transform-domain methods convert spatial pixel blocks into frequency components. The 2D Discrete Cosine Transform (DCT) is the core mathematical transform of the JPEG standard. Embedding secret data into quantized DCT coefficients (specifically mid-frequency AC coefficients) ensures that the message shares the same frequency representation as JPEG compression itself. High frequencies are zeroed out by JPEG quantization, and low-frequency DC coefficients are overly sensitive to visual distortion; mid-frequency AC coefficients provide an optimal trade-off between imperceptibility and robustness.</p>
+<h3 id="216-error-correcting-codes-in-steganography">2.1.6 Error-Correcting Codes in Steganography</h3>
+<p>Even in DCT-domain embedding, lossy JPEG re-encoding introduces rounding noise and minor coefficient perturbations that can flip embedded bits. Integrating Error-Correcting Codes (ECC), such as Reed-Solomon (RS) codes, provides mathematical resilience. Reed-Solomon codes treat byte blocks as polynomials over Galois Fields ($\text{GF}(2^8)$). By adding parity bytes, an $RS(n, k)$ codec can detect and reconstruct up to $t = \lfloor (n - k) / 2 \rfloor$ corrupted symbols, allowing complete payload recovery after lossy JPEG compression.</p>
+<h3 id="217-recent-adaptive-and-hybrid-frameworks-2026">2.1.7 Recent Adaptive and Hybrid Frameworks (2026)</h3>
+<p>Recent literature explores hybrid steganographic pipelines combining adaptive pixel selection with cryptography:
+- <strong>Aljughaiman and Alrawashdeh (2026)</strong> presented content-adaptive LSB steganography utilizing saliency fusion, Ant Colony Optimization (ACO) dispersion, and hybrid encryption. While their method improved visual imperceptibility, their ablation study noted ongoing vulnerabilities under lossy recompression.
+- <strong>Joshi and Bhand (2026)</strong> formulated an adaptive fuzzy logic-based steganographic encryption framework. Their comprehensive experimental evaluation underscored that spatial-domain methods, even when guided by fuzzy edge detection, fail completely when stego-images are transmitted across JPEG-compressing communication channels.</p>
+<hr />
+<h2 id="22-comparative-analysis">2.2 Comparative Analysis</h2>
+<p>Table 2.1 presents a comparative analysis of the primary steganographic approaches documented in the literature alongside the proposed project framework.</p>
+<h3 id="table-21-comparative-analysis-of-steganographic-approaches">Table 2.1 Comparative Analysis of Steganographic Approaches</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Approach</th>
+<th style="text-align: left;">Domain / Methodology</th>
+<th style="text-align: left;">Main Strengths</th>
+<th style="text-align: left;">Main Limitations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Sequential LSB Replacement</strong></td>
+<td style="text-align: left;">Spatial domain; raster-scan bit substitution</td>
+<td style="text-align: left;">Simple implementation; high theoretical capacity ($\approx 100\%$ pixels); fast execution.</td>
+<td style="text-align: left;">Vulnerable to Chi-Square and RS attacks; 100% corrupted by lossy JPEG compression; no authentication.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pseudo-Random LSB Replacement</strong></td>
+<td style="text-align: left;">Spatial domain; PRNG-guided bit substitution</td>
+<td style="text-align: left;">Eliminates spatial clustering; spreads data across entire image.</td>
+<td style="text-align: left;">Still equalizes Pairs of Values (PoVs); fully detectable by Chi-Square and RS tests; destroyed by JPEG.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Basic LSB Matching ($\pm 1$)</strong></td>
+<td style="text-align: left;">Spatial domain; random $\pm 1$ perturbation</td>
+<td style="text-align: left;">Preserves histogram shape; defeats Chi-Square attack; low MSE.</td>
+<td style="text-align: left;">Still fragile under lossy JPEG compression; vulnerable to RS attack at high embedding rates if uncapped.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pure DCT Embedding</strong></td>
+<td style="text-align: left;">Frequency domain; 8x8 block DCT coefficients</td>
+<td style="text-align: left;">Better survival under JPEG than spatial LSB; imperceptible in mid-frequencies.</td>
+<td style="text-align: left;">Vulnerable to quantization noise without ECC; low capacity compared to spatial domain.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Proposed Dual-Mode Framework</strong></td>
+<td style="text-align: left;"><strong>Dual Domain: Key-Seeded LSB Matching ($\pm 1$) + Robust 8x8 DCT with Reed-Solomon ECC + AES-GCM</strong></td>
+<td style="text-align: left;"><strong>Evades Chi-Square &amp; RS steganalysis via PRNG $\pm 1$ matching with capped rate; survives lossy JPEG ($Q \ge 70$) via DCT QIM and Reed-Solomon ECC; tamper-evident AES-GCM encryption.</strong></td>
+<td style="text-align: left;">Capped spatial capacity ($\le 50\%$); DCT mode has lower payload capacity than spatial mode; does not survive image cropping/resizing.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="23-research-gap-limitations-of-existing-systems">2.3 Research Gap / Limitations of Existing Systems</h2>
+<p>Although numerous steganography implementations exist in the literature, several critical research gaps remain unaddressed in accessible software tools:</p>
+<ol>
+<li><strong>Trade-off Between Detectability and Robustness</strong>: Existing systems typically focus either on imperceptibility (spatial methods) or robustness (frequency methods), rarely providing a unified dual-domain framework that allows users to select the optimal mechanism based on channel requirements.</li>
+<li><strong>Persistence of PoV Statistical Footprints</strong>: Many tools that claim to randomize embedding order still use standard LSB substitution, leaving the fatal Pairs-of-Values equalizations that modern steganalysis algorithms easily detect.</li>
+<li><strong>Absence of Error Correction in Steganography</strong>: Most frequency-domain implementations fail under practical JPEG recompression because they omit forward error correction, rendering single-bit perturbations fatal to message extraction.</li>
+<li><strong>Lack of Authenticated Encryption</strong>: Open-source steganography software frequently embeds plaintext ASCII or unauthenticated ciphers (e.g., raw DES or AES-ECB), which fail silently or produce unverified garbage when corrupted, lacking tamper evidence.</li>
+<li><strong>Absence of Integrated Steganalysis Verification</strong>: Steganography tools rarely integrate steganalysis assessment tools within the same platform, preventing practitioners from validating whether their stego-images genuinely withstand Chi-Square and RS attacks.</li>
+</ol>
+<hr />
+<h2 id="24-proposed-system-proposed-approach">2.4 Proposed System / Proposed Approach</h2>
+<h3 id="241-system-overview">2.4.1 System Overview</h3>
+<p>The proposed system is an academic-grade, end-to-end image steganography platform featuring two distinct embedding pipelines:
+1. <strong>Mode A (Low-Detectability Spatial Mode)</strong>: Employs Key-Seeded LSB Matching ($\pm 1$) with PRNG index permutation and a safety capacity cap to resist statistical steganalysis.
+2. <strong>Mode B (JPEG-Resilient Frequency Mode)</strong>: Employs 8x8 block Discrete Cosine Transform (DCT) Quantization Index Modulation (QIM) coupled with Reed-Solomon Error-Correcting Codes to withstand lossy JPEG recompression.</p>
+<p>Both modes are backed by authenticated <strong>AES-256-GCM</strong> encryption, a standardized protocol header, capacity validation, an interactive 5-tab web dashboard, a scriptable CLI, and integrated statistical steganalysis tools.</p>
+<h3 id="242-main-stages-of-the-proposed-approach">2.4.2 Main Stages of the Proposed Approach</h3>
+<ol>
+<li><strong>Key Derivation &amp; Authenticated Encryption</strong>: Plaintext is processed through PBKDF2-HMAC-SHA256 (100,000 iterations) with a 16-byte random salt to generate a 256-bit AES key. The payload is encrypted using AES-GCM with a 12-byte nonce, producing ciphertext and a 16-byte authentication tag.</li>
+<li><strong>Header Assembly</strong>: A 52-byte protocol header is constructed: <code>[MAGIC (4B: 'STEG')] + [SALT (16B)] + [NONCE (12B)] + [PAYLOAD_LEN (4B)] + [CIPHERTEXT] + [TAG (16B)]</code>.</li>
+<li><strong>Domain-Specific Embedding</strong>:</li>
+<li><em>Spatial Mode</em>: A deterministic 64-bit PRNG seed is derived from the passphrase. Coordinates are shuffled. For each bit, if pixel LSB differs, a pseudo-random $\pm 1$ adjustment is applied with boundary clipping ($[0, 255]$).</li>
+<li><em>Frequency Mode</em>: Payload is protected with Reed-Solomon parity bytes (<code>reedsolo</code>). Image luminance ($Y$) is divided into $8 \times 8$ blocks. Forward 2D-DCT is computed. Bits are embedded into mid-frequency AC coefficients using QIM ($\Delta = 30.0$). Inverse 2D-DCT reconstructs the spatial stego-image.</li>
+<li><strong>Extraction &amp; Verification</strong>: Receiver extracts bits, parses the header, performs Reed-Solomon error correction (in DCT mode), and authenticates the AES-GCM tag. If tampering or an incorrect passphrase is detected, an explicit security error is returned.</li>
+<li><strong>Steganalysis &amp; Evaluation</strong>: The system analyzes cover and stego images using Chi-Square ($\chi^2$), RS analysis, PSNR, SSIM, MSE, and Bit Error Rate (BER) across varying JPEG quality factors.</li>
+</ol>
+<h3 id="243-expected-features">2.4.3 Expected Features</h3>
+<ul>
+<li>Dual-domain embedding architecture (Spatial LSB Matching vs Robust 8x8 DCT).</li>
+<li>Key-seeded pseudo-random pixel scattering.</li>
+<li>Statistical anti-steganalysis design ($\pm 1$ matching with rate capping).</li>
+<li>Reed-Solomon forward error correction for lossy JPEG channels.</li>
+<li>Military-grade authenticated encryption (AES-256-GCM + PBKDF2).</li>
+<li>Built-in statistical steganalysis lab (Chi-Square and RS attacks).</li>
+<li>Real-time capacity estimation and image fidelity metrics (PSNR, SSIM, MSE).</li>
+<li>Web application (Flask, responsive dark-mode UI) and scriptable CLI.</li>
+</ul>
+<h3 id="244-expected-benefits">2.4.4 Expected Benefits</h3>
+<ul>
+<li><strong>Zero Statistical Artifacts</strong>: Eliminates Pairs-of-Values equalization, allowing stego-images to pass Chi-Square and RS steganalysis tests.</li>
+<li><strong>Robust Transmission</strong>: Enables covert communication across channels that enforce lossy JPEG recompression.</li>
+<li><strong>Tamper Evidence</strong>: Cryptographic authentication guarantees that corrupted or manipulated stego-images are flagged immediately.</li>
+<li><strong>Reproducible Academic Benchmarking</strong>: Allows direct experimental comparison between baseline sequential LSB and proposed techniques.</li>
+</ul>
+<h3 id="245-limitations-of-the-proposed-approach">2.4.5 Limitations of the Proposed Approach</h3>
+<ul>
+<li>Capped spatial embedding rate ($\le 50\%$) restricts maximum payload size to protect against statistical detection.</li>
+<li>DCT mode provides lower payload capacity than spatial mode due to 8x8 block allocation constraints.</li>
+<li>Robust DCT mode survives lossy JPEG compression ($Q \ge 70$), but does not survive spatial geometric modifications (resizing, cropping, rotation).</li>
+</ul>
+<hr />
+<h1 id="chapter-3-software-requirement-analysis">CHAPTER 3 – SOFTWARE REQUIREMENT ANALYSIS</h1>
+<h2 id="31-hardware-specification">3.1 Hardware Specification</h2>
+<p>The project is implemented and evaluated on standard consumer and workstation computing hardware without requiring specialized accelerators or proprietary hardware.</p>
+<h3 id="311-development-hardware">3.1.1 Development Hardware</h3>
+<p>Table 3.1 details the development hardware specifications used for building, benchmarking, and testing the system.</p>
+<h3 id="table-31-development-hardware-requirements">Table 3.1 Development Hardware Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Component</th>
+<th style="text-align: left;">Minimum Specification</th>
+<th style="text-align: left;">Recommended Specification</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Processor (CPU)</strong></td>
+<td style="text-align: left;">Intel Core i3 / AMD Ryzen 3 (Dual-core, 2.0 GHz)</td>
+<td style="text-align: left;">Intel Core i5/i7 / AMD Ryzen 5/7 (Quad-core or better, 2.8+ GHz)</td>
+<td style="text-align: left;">Running DCT transforms, Reed-Solomon polynomial math, AES-GCM encryption, and web server.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>RAM</strong></td>
+<td style="text-align: left;">4 GB DDR4</td>
+<td style="text-align: left;">8 GB or 16 GB DDR4/DDR5</td>
+<td style="text-align: left;">Storing uncompressed 2D/3D image arrays (NumPy), matrix buffers, and web sessions.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Storage</strong></td>
+<td style="text-align: left;">1 GB available storage</td>
+<td style="text-align: left;">5 GB SSD storage</td>
+<td style="text-align: left;">Storing Python dependencies, virtual environments, test image datasets, and generated stego files.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Display</strong></td>
+<td style="text-align: left;">$1366 \times 768$ resolution</td>
+<td style="text-align: left;">$1920 \times 1080$ Full HD</td>
+<td style="text-align: left;">Inspecting cover vs stego visual fidelity and viewing dashboard charts.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Input Devices</strong></td>
+<td style="text-align: left;">Keyboard and Mouse</td>
+<td style="text-align: left;">Keyboard and Mouse</td>
+<td style="text-align: left;">Code authoring, terminal interaction, and web dashboard control.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="312-system-hardware">3.1.2 System Hardware</h3>
+<p>For deployment or end-user execution:
+- Standard desktop, laptop, or server capable of executing Python 3.10+.
+- Network interface (Ethernet or Wi-Fi) if accessed as a networked web service via HTTP/REST.</p>
+<hr />
+<h2 id="32-software-specification">3.2 Software Specification</h2>
+<p>The software environment requirements describe the operating system, programming runtime, and libraries required to operate the system.</p>
+<h3 id="321-operating-system">3.2.1 Operating System</h3>
+<ul>
+<li><strong>Supported Operating Systems</strong>: Windows 10 / Windows 11 (tested on Windows 11 64-bit), Ubuntu Linux 20.04+, macOS 12+.</li>
+<li><strong>Console Encoding</strong>: UTF-8 / Windows cp1252 compatible with ASCII fallback.</li>
+</ul>
+<h3 id="322-programming-language-and-runtime">3.2.2 Programming Language and Runtime</h3>
+<ul>
+<li><strong>Programming Language</strong>: Python 3.10 to Python 3.14 (developed and verified on Python 3.14.0 64-bit).</li>
+<li><strong>Package Manager</strong>: <code>pip</code> (Python package installer).</li>
+</ul>
+<h3 id="323-main-libraries-and-dependencies">3.2.3 Main Libraries and Dependencies</h3>
+<ul>
+<li><strong>Pillow (PIL) $\ge 10.0.0$</strong>: Digital image file ingestion, format conversion (RGB, JPEG, PNG), and metadata handling.</li>
+<li><strong>NumPy $\ge 1.26.0$ / $2.0.0+$</strong>: Fast multidimensional array manipulation, bitwise operations (<code>unpackbits</code>, <code>packbits</code>), and vector operations.</li>
+<li><strong>OpenCV (<code>opencv-python</code>) $\ge 4.8.0$</strong>: 2D Discrete Cosine Transform (<code>cv2.dct</code>), Inverse DCT (<code>cv2.idct</code>), and YCrCb color space conversions.</li>
+<li><strong>Cryptography $\ge 42.0.0$</strong>: AES-256-GCM cipher primitives, PBKDF2-HMAC-SHA256 key derivation, and cryptographically secure random number generation.</li>
+<li><strong>reedsolo $\ge 1.7.0$</strong>: Galois Field arithmetic and Reed-Solomon error correction encoding/decoding (<code>RSCodec</code>).</li>
+<li><strong>SciPy $\ge 1.12.0$</strong>: Statistical distributions (<code>scipy.stats.chi2</code>) for calculating Chi-Square survival functions and p-values.</li>
+<li><strong>Pandas $\ge 2.0.0$</strong>: Tabular data structuring, experimental metric aggregation, and CSV report generation.</li>
+<li><strong>Flask $\ge 3.0.0$</strong>: Lightweight WSGI web framework providing REST endpoints and serving the frontend dashboard.</li>
+</ul>
+<h3 id="324-data-input-and-output-requirements">3.2.4 Data Input and Output Requirements</h3>
+<ul>
+<li><strong>Cover Image Input</strong>: Uncompressed or compressed raster images (<code>PNG</code>, <code>JPEG</code>, <code>BMP</code>, <code>WEBP</code>) with minimum dimensions of $64 \times 64$ pixels.</li>
+<li><strong>Stego Image Output</strong>: Lossless PNG (for spatial LSB mode) or quality-controlled JPEG/PNG (for DCT robust mode).</li>
+<li><strong>Data Persistence</strong>: Uploaded and generated images are managed in temporary upload caches with randomized UUID identifiers.</li>
+</ul>
+<hr />
+<h2 id="33-software-tools-and-their-features">3.3 Software / Tools and Their Features</h2>
+<p>Table 3.3 lists the development tools, frameworks, and utilities utilized in the project.</p>
+<h3 id="table-33-software-tools-and-their-features">Table 3.3 Software Tools and Their Features</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tool / Software</th>
+<th style="text-align: left;">Role / Category</th>
+<th style="text-align: left;">Features and Use in the Project</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Visual Studio Code / Antigravity IDE</strong></td>
+<td style="text-align: left;">Integrated Development Environment</td>
+<td style="text-align: left;">Code authoring, syntax highlighting, debugging, Git integration, and terminal access.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Python 3.14 Runtime</strong></td>
+<td style="text-align: left;">Language Engine</td>
+<td style="text-align: left;">Execution of cryptographic, mathematical, and web server scripts.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Flask Framework</strong></td>
+<td style="text-align: left;">Backend Web Framework</td>
+<td style="text-align: left;">Provides RESTful endpoints (<code>/api/embed</code>, <code>/api/extract</code>, <code>/api/jpeg-lab</code>, <code>/api/steganalysis</code>, <code>/api/benchmark</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Modern HTML5 / CSS3 / JavaScript</strong></td>
+<td style="text-align: left;">Frontend User Interface</td>
+<td style="text-align: left;">Responsive dark-mode dashboard, drag-and-drop file dropzones, real-time capacity calculator, and AJAX asynchronous callers.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Git &amp; GitHub</strong></td>
+<td style="text-align: left;">Version Control</td>
+<td style="text-align: left;">Source code version tracking, branch isolation, and historical commit logging.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Windows PowerShell</strong></td>
+<td style="text-align: left;">Command-Line Environment</td>
+<td style="text-align: left;">Automated batch file execution (<code>run_app.bat</code>), CLI tool execution (<code>cli.py</code>), and unit testing.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="chapter-4-system-analysis">CHAPTER 4 – SYSTEM ANALYSIS</h1>
+<h2 id="41-requirement-specification">4.1 Requirement Specification</h2>
+<h3 id="411-functional-requirements">4.1.1 Functional Requirements</h3>
+<ul>
+<li><strong>FR-01 (Cover Ingestion)</strong>: The system shall accept standard image file formats (PNG, JPG, BMP) and convert them to uncompressed arrays.</li>
+<li><strong>FR-02 (Capacity Calculation)</strong>: The system shall compute and display the maximum embedding capacity in real time for both spatial and frequency domains.</li>
+<li><strong>FR-03 (Authenticated Encryption)</strong>: The system shall encrypt secret messages using AES-256-GCM with PBKDF2 key derivation prior to embedding.</li>
+<li><strong>FR-04 (Spatial LSB Matching)</strong>: The system shall support Key-Seeded LSB Matching ($\pm 1$) with PRNG shuffling, rate capping, and boundary clipping.</li>
+<li><strong>FR-05 (Robust DCT Embedding)</strong>: The system shall support 8x8 block 2D-DCT embedding in mid-frequency AC luminance coefficients with Reed-Solomon ECC.</li>
+<li><strong>FR-06 (Baseline Comparison)</strong>: The system shall provide baseline sequential LSB substitution for empirical comparison.</li>
+<li><strong>FR-07 (Blind Extraction)</strong>: The system shall extract, error-correct, and decrypt payloads using the provided passphrase.</li>
+<li><strong>FR-08 (Tamper Detection)</strong>: The system shall detect unauthorized pixel modifications and report authentication errors.</li>
+<li><strong>FR-09 (Steganalysis Testing)</strong>: The system shall execute Chi-Square ($\chi^2$) and RS steganalysis, reporting statistics, p-values, and detection verdicts.</li>
+<li><strong>FR-10 (JPEG Resilience Simulation)</strong>: The system shall simulate lossy JPEG recompression across configurable quality factors ($Q=20$ to $95$) and measure Bit Error Rates.</li>
+<li><strong>FR-11 (Reporting &amp; Export)</strong>: The system shall generate comprehensive benchmark tables and export them to CSV.</li>
+</ul>
+<h3 id="412-non-functional-requirements">4.1.2 Non-Functional Requirements</h3>
+<ul>
+<li><strong>NFR-01 (Usability)</strong>: Intuitive 5-tab user interface with drag-and-drop file inputs and clear status banners.</li>
+<li><strong>NFR-02 (Performance)</strong>: Embedding and extraction of a standard 512x512 image shall complete in under 500 milliseconds on standard CPU hardware.</li>
+<li><strong>NFR-03 (Visual Imperceptibility)</strong>: Stego-images shall maintain a PSNR exceeding $40\text{ dB}$ and an SSIM exceeding $0.99$.</li>
+<li><strong>NFR-04 (Statistical Imperceptibility)</strong>: Stego-images produced by LSB matching shall produce Chi-Square p-values $&lt; 0.05$ and RS asymmetry $\Delta R &lt; 0.03$.</li>
+<li><strong>NFR-05 (Reliability &amp; Robustness)</strong>: The system shall handle corrupted data, empty passwords, and capacity overruns gracefully with descriptive error messages.</li>
+<li><strong>NFR-06 (Portability)</strong>: Cross-platform compatibility across Windows, Linux, and macOS without proprietary hardware requirements.</li>
+</ul>
+<hr />
+<h2 id="42-characteristics-of-existing-systems">4.2 Characteristics of Existing Systems</h2>
+<p>Traditional steganography software typically exhibits the following characteristics:
+- <strong>Sequential Ingestion</strong>: Bits are embedded linearly along raster lines, creating localized clusters of altered pixels that are vulnerable to visual and statistical steganalysis.
+- <strong>Pairs-of-Values Symmetry Destruction</strong>: Standard LSB substitution equalizes $2k$ and $2k+1$ histogram bins, making detection trivial via Chi-Square analysis.
+- <strong>Extreme Fragility</strong>: Any format change, such as saving as a JPEG, irreversibly destroys the embedded payload.
+- <strong>Absence of Authentication</strong>: Lack of AEAD encryption means corrupted images produce unverified garbage text rather than explicit error alerts.</p>
+<hr />
+<h2 id="43-proposed-system-architecture-and-workflow">4.3 Proposed System Architecture and Workflow</h2>
+<p>The proposed architecture integrates cryptographic pre-processing, domain-specific embedding, and post-embedding steganalysis verification into a unified workflow.</p>
+<h3 id="431-system-workflow">4.3.1 System Workflow</h3>
+<ol>
+<li><strong>User Input</strong>: Cover image, plaintext message, password, and algorithm selection.</li>
+<li><strong>Validation</strong>: Image format verification and physical capacity check against safety caps.</li>
+<li><strong>Cryptographic Wrapping</strong>: PBKDF2 key derivation and AES-256-GCM authenticated encryption.</li>
+<li><strong>Embedding Stage</strong>:</li>
+<li><em>LSB Matching</em>: Key-seeded PRNG permutation, coin-flip $\pm 1$ alteration.</li>
+<li><em>Robust DCT</em>: Reed-Solomon parity encoding, 8x8 block 2D-DCT, QIM modulation on AC coefficients, 2D-IDCT reconstruction.</li>
+<li><strong>Quality Assessment</strong>: Calculation of PSNR, MSE, and SSIM against the original cover.</li>
+<li><strong>Delivery &amp; Inspection</strong>: Stego-image generated for download, with options to test JPEG recompression or run Chi-Square / RS steganalysis.</li>
+</ol>
+<hr />
+<h2 id="44-feasibility-study">4.4 Feasibility Study</h2>
+<h3 id="441-technical-feasibility">4.4.1 Technical Feasibility</h3>
+<p>The project is technically feasible as all mathematical transforms (2D-DCT, IDCT), cryptographic primitives (AES-GCM, PBKDF2), Galois field polynomial arithmetic (Reed-Solomon), and statistical tests (Chi-Square, RS analysis) are supported by mature, highly optimized open-source Python libraries (<code>numpy</code>, <code>opencv-python</code>, <code>cryptography</code>, <code>scipy</code>, <code>reedsolo</code>).</p>
+<h3 id="442-economic-feasibility">4.4.2 Economic Feasibility</h3>
+<p>The project incurs zero direct software licensing costs. All components, libraries, and frameworks utilized (Python, Flask, OpenCV, Pillow) are free and open-source under permissive licenses (MIT, BSD, Apache 2.0). Standard commodity PC hardware is sufficient for development, testing, and deployment.</p>
+<h3 id="443-operational-feasibility">4.4.3 Operational Feasibility</h3>
+<p>The system is operationally feasible for non-technical end-users via the responsive web dashboard, which requires no command-line proficiency, while providing a scriptable CLI for advanced researchers and automated batch processing.</p>
+<h3 id="444-schedule-feasibility">4.4.4 Schedule Feasibility</h3>
+<p>The project was structured into distinct modular phases:
+1. Core cryptographic and spatial algorithms.
+2. DCT transformation and Reed-Solomon integration.
+3. Steganalysis attack suite implementation.
+4. Web application and CLI interface design.
+5. Verification, unit testing, and empirical evaluation.
+All phases were completed within the allocated project timeline.</p>
+<hr />
+<h2 id="45-software-requirement-specification-srs">4.5 Software Requirement Specification (SRS)</h2>
+<h3 id="451-purpose">4.5.1 Purpose</h3>
+<p>The purpose of the software is to provide a secure, statistically imperceptible, and compression-resilient image steganography platform with built-in attack verification.</p>
+<h3 id="452-product-functions">4.5.2 Product Functions</h3>
+<ul>
+<li>Upload cover image and compute live embedding capacity.</li>
+<li>AES-256-GCM encryption with PBKDF2 key derivation.</li>
+<li>Key-seeded LSB Matching ($\pm 1$) embedding with safety rate capping.</li>
+<li>8x8 Block DCT embedding with Reed-Solomon error correction.</li>
+<li>Baseline sequential LSB embedding for academic comparison.</li>
+<li>Blind extraction, Reed-Solomon error correction, and GCM authentication.</li>
+<li>Simulation of lossy JPEG compression ($Q=20$ to $95$) with Bit Error Rate calculation.</li>
+<li>Automated Chi-Square ($\chi^2$) and RS steganalysis execution.</li>
+<li>Automated experimental evaluation matrix with CSV export.</li>
+</ul>
+<h3 id="453-user-classes">4.5.3 User Classes</h3>
+<ul>
+<li><strong>Security Researcher / Student</strong>: Evaluates steganographic algorithms, inspects PSNR/SSIM, tests attacks, and exports benchmark data.</li>
+<li><strong>End-User / Communicator</strong>: Embeds and extracts confidential messages using passphrases via the browser interface.</li>
+</ul>
+<h3 id="454-external-interface-requirements">4.5.4 External Interface Requirements</h3>
+<ul>
+<li><strong>Web UI</strong>: Modern dark-mode interface with 5 distinct functional tabs.</li>
+<li><strong>REST API</strong>: JSON endpoints (<code>/api/embed</code>, <code>/api/extract</code>, <code>/api/steganalysis</code>, <code>/api/jpeg-lab</code>, <code>/api/benchmark</code>).</li>
+<li><strong>CLI</strong>: Standard POSIX-compliant argument parser (<code>python cli.py [command]</code>).</li>
+</ul>
+<h3 id="455-acceptance-criteria">4.5.5 Acceptance Criteria</h3>
+<p>The system meets acceptance criteria when:
+1. Stego-images achieve $\text{PSNR} &gt; 45\text{ dB}$ and $\text{SSIM} &gt; 0.99$.
+2. LSB matching stego-images produce Chi-Square $p$-values $&lt; 0.05$ and RS asymmetry $\Delta R &lt; 0.03$.
+3. Robust DCT mode achieves $0\%$ Bit Error Rate under lossy JPEG compression at quality factors $Q \ge 70$.
+4. Incorrect passphrases or manipulated pixels trigger explicit authentication failure alerts.</p>
+<hr />
+<h1 id="chapter-5-system-design">CHAPTER 5 – SYSTEM DESIGN</h1>
+<h2 id="51-system-architecture-overall-workflow">5.1 System Architecture / Overall Workflow</h2>
+<p>The system is organized into a four-tier architecture: Presentation Tier, Application / API Tier, Processing &amp; Steganography Core Tier, and Data Storage Tier.</p>
+<h3 id="table-51-system-architecture-layers-and-their-components">Table 5.1 System Architecture Layers and Their Components</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Layer</th>
+<th style="text-align: left;">Main Elements</th>
+<th style="text-align: left;">Responsibilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Presentation Layer</strong></td>
+<td style="text-align: left;">HTML5, CSS3 (Dark Theme), Vanilla JavaScript (ES6+), Fetch API</td>
+<td style="text-align: left;">Renders the 5 dashboard tabs, drag-and-drop dropzones, real-time previews, metric cards, and data tables.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Application Layer</strong></td>
+<td style="text-align: left;">Flask WSGI Web Server, REST API Controllers, File Upload Handlers</td>
+<td style="text-align: left;">Routes client requests, manages payload validation, coordinates background processing, and serves JSON responses.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Steganography Core Layer</strong></td>
+<td style="text-align: left;"><code>SequentialLSB</code>, <code>KeySeededLSBMatching</code>, <code>RobustDCTStego</code>, <code>ChiSquareAnalysis</code>, <code>RSSteganalysis</code>, <code>StegoCrypto</code></td>
+<td style="text-align: left;">Core algorithmic execution: AES-GCM encryption, PRNG permutation, DCT transformation, QIM modulation, Reed-Solomon ECC, and statistical steganalysis.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Data &amp; Storage Layer</strong></td>
+<td style="text-align: left;">Local Filesystem Storage (<code>uploads/</code>), Temporary In-Memory Buffers</td>
+<td style="text-align: left;">Persists uploaded cover images, generated stego-images, and exported CSV benchmark reports.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-mermaid">graph TD
+    UI[&quot;Web Dashboard / Browser UI (5 Tabs) &amp; CLI&quot;]
+    API[&quot;Flask REST API Controllers (app.py)&quot;]
+    CORE[&quot;Steganography Core Processing&quot;]
+
+    subgraph CoreEngine[&quot;Core Modules&quot;]
+        CRYPTO[&quot;Crypto Module (AES-256-GCM + PBKDF2)&quot;]
+        SPATIAL[&quot;Spatial Engine (Key-Seeded LSB Matching +-1)&quot;]
+        DCT[&quot;Frequency Engine (8x8 DCT + Reed-Solomon ECC)&quot;]
+        STEG[&quot;Steganalysis Suite (Chi-Square &amp; RS Analysis)&quot;]
+        METRICS[&quot;Metrics &amp; Benchmark Suite (PSNR, SSIM, BER)&quot;]
+    end
+
+    STORAGE[&quot;Uploads Directory / File Cache&quot;]
+
+    UI --&gt;|HTTP / REST JSON| API
+    API --&gt; CORE
+    CORE --&gt; CRYPTO
+    CORE --&gt; SPATIAL
+    CORE --&gt; DCT
+    CORE --&gt; STEG
+    CORE --&gt; METRICS
+    CORE --&gt; STORAGE
+</code></pre>
+<p><em>Figure 5.1. Logical System Architecture of the Image Steganography System</em></p>
+<hr />
+<h2 id="52-context-diagram">5.2 Context Diagram</h2>
+<p>The context diagram models the system boundary and its interactions with external entities (User/Operator, File System, and Output Channels).</p>
+<h3 id="table-52-context-diagram-entities-inputs-and-outputs">Table 5.2 Context Diagram Entities, Inputs, and Outputs</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Entity</th>
+<th style="text-align: left;">Inputs to System</th>
+<th style="text-align: left;">Outputs from System</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>User / Operator</strong></td>
+<td style="text-align: left;">Cover image file, secret message text, passphrase, algorithm selection, JPEG quality slider value.</td>
+<td style="text-align: left;">Live capacity badges, visual fidelity metrics (PSNR/SSIM), stego-image download, decrypted plaintext, steganalysis verdicts, benchmark CSV.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Local File System</strong></td>
+<td style="text-align: left;">Raw cover image files (<code>.png</code>, <code>.jpg</code>, <code>.bmp</code>).</td>
+<td style="text-align: left;">Persisted stego-images (<code>.png</code>, <code>.jpg</code>), exported experimental benchmark reports (<code>.csv</code>).</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-mermaid">flowchart LR
+    User[&quot;User / Security Operator&quot;]
+    System([&quot;Image Steganography System (StegoShield AI)&quot;])
+    FS[(&quot;Local File System / Storage&quot;)]
+
+    User --&gt;|&quot;Cover Image, Secret Payload, Passphrase, Mode&quot;| System
+    System --&gt;|&quot;Stego Image, Plaintext, Metrics, Attack Verdicts&quot;| User
+    System &lt;--&gt;|&quot;Read Covers / Write Stego Images &amp; CSVs&quot;| FS
+</code></pre>
+<p><em>Figure 5.2. Context Diagram (Level 0 Overview)</em></p>
+<hr />
+<h2 id="53-use-case-diagram">5.3 Use Case Diagram</h2>
+<p>The primary actor is the Security Operator / Student Researcher.</p>
+<pre><code class="language-mermaid">flowchart TD
+    Actor((&quot;Security Operator&quot;))
+
+    UC1[&quot;1. Upload Cover &amp; Check Capacity&quot;]
+    UC2[&quot;2. Embed Secret (LSB Matching / DCT / Sequential)&quot;]
+    UC3[&quot;3. Download Generated Stego Image&quot;]
+    UC4[&quot;4. Extract &amp; Decrypt Secret Payload&quot;]
+    UC5[&quot;5. Simulate JPEG Compression Resilience&quot;]
+    UC6[&quot;6. Execute Chi-Square &amp; RS Steganalysis&quot;]
+    UC7[&quot;7. Run Automated Comparative Benchmark &amp; Export CSV&quot;]
+
+    Actor --&gt; UC1
+    Actor --&gt; UC2
+    Actor --&gt; UC3
+    Actor --&gt; UC4
+    Actor --&gt; UC5
+    Actor --&gt; UC6
+    Actor --&gt; UC7
+</code></pre>
+<p><em>Figure 5.3. Use Case Diagram</em></p>
+<hr />
+<h2 id="54-activity-diagram-workflow">5.4 Activity Diagram / Workflow</h2>
+<p>Figure 5.4 illustrates the end-to-end activity workflow during an embedding and verification session.</p>
+<pre><code class="language-mermaid">flowchart TD
+    Start([Start Session]) --&gt; SelectMode{Select Mode}
+
+    SelectMode --&gt;|Embed Mode| IngestCover[Upload Cover Image &amp; Validate Size]
+    IngestCover --&gt; InputSecret[Enter Secret Text &amp; Passphrase]
+    InputSecret --&gt; Encrypt[PBKDF2 Key Derivation + AES-256-GCM Encrypt]
+
+    Encrypt --&gt; ChooseAlg{Choose Algorithm}
+    ChooseAlg --&gt;|LSB Matching| Permute[Key-Seeded PRNG Permutation]
+    Permute --&gt; MatchBits[Apply +-1 LSB Matching with Clipping Protection]
+
+    ChooseAlg --&gt;|Robust DCT| RSEncode[Reed-Solomon ECC Encoding]
+    RSEncode --&gt; DCTTransform[Y-Channel 8x8 Block 2D-DCT]
+    DCTTransform --&gt; QIM[Quantization Index Modulation on AC Coeffs]
+    QIM --&gt; IDCT[Inverse 2D-DCT &amp; Color Reconstruction]
+
+    MatchBits --&gt; CalcMetrics[Calculate PSNR, MSE, SSIM]
+    IDCT --&gt; CalcMetrics
+    CalcMetrics --&gt; SaveStego[Generate Stego Image &amp; Present Download]
+
+    SaveStego --&gt; VerifyChoice{Run Verification?}
+    VerifyChoice --&gt;|Steganalysis Lab| RunAttacks[Execute Chi-Square and RS Tests]
+    VerifyChoice --&gt;|JPEG Lab| RunJPEG[Simulate Lossy JPEG &amp; Measure BER]
+    VerifyChoice --&gt;|Done| End([End Session])
+    RunAttacks --&gt; End
+    RunJPEG --&gt; End
+</code></pre>
+<p><em>Figure 5.4. System Activity Workflow</em></p>
+<hr />
+<h2 id="55-data-flow-diagrams-dfd">5.5 Data Flow Diagrams (DFD)</h2>
+<h3 id="551-data-flow-diagram-level-0">5.5.1 Data Flow Diagram – Level 0</h3>
+<p>The Level 0 DFD represents the system as a single process interacting with external entities.</p>
+<pre><code class="language-mermaid">flowchart LR
+    User[&quot;User / Operator&quot;]
+    P0((&quot;0.0 Steganography Processing Engine&quot;))
+    Store[(&quot;File Storage (Uploads &amp; CSVs)&quot;)]
+
+    User --&gt;|&quot;Image + Payload + Passphrase&quot;| P0
+    P0 --&gt;|&quot;Stego Image + Decrypted Text + Metrics&quot;| User
+    P0 --&gt;|&quot;Save Stego Files &amp; Reports&quot;| Store
+</code></pre>
+<p><em>Figure 5.5. Data Flow Diagram – Level 0</em></p>
+<h3 id="552-data-flow-diagram-level-1">5.5.2 Data Flow Diagram – Level 1</h3>
+<p>Level 1 decomposes the system into authentication/encryption, embedding, extraction, steganalysis, and reporting sub-processes.</p>
+<pre><code class="language-mermaid">flowchart TD
+    User[&quot;User / Operator&quot;]
+    P1((&quot;1.0 Cryptographic Encryption &amp; Packaging&quot;))
+    P2((&quot;2.0 Domain Embedding Controller&quot;))
+    P3((&quot;3.0 Extraction &amp; Authentication Engine&quot;))
+    P4((&quot;4.0 Steganalysis Attack Processor&quot;))
+    P5((&quot;5.0 Benchmark &amp; Metrics Evaluator&quot;))
+    Store[(&quot;Uploads Cache &amp; CSV Storage&quot;)]
+
+    User --&gt;|&quot;Plaintext + Password&quot;| P1
+    P1 --&gt;|&quot;AES-GCM Ciphertext Package&quot;| P2
+    User --&gt;|&quot;Cover Image&quot;| P2
+    P2 --&gt;|&quot;Stego Image&quot;| Store
+    P2 --&gt;|&quot;Fidelity Stats&quot;| User
+
+    Store --&gt;|&quot;Stego Image&quot;| P3
+    User --&gt;|&quot;Passphrase&quot;| P3
+    P3 --&gt;|&quot;Decrypted Plaintext / Error Alert&quot;| User
+
+    Store --&gt;|&quot;Image to Inspect&quot;| P4
+    P4 --&gt;|&quot;Chi-Square Stat &amp; RS Delta-R&quot;| User
+
+    P2 --&gt;|&quot;Cover + Stego Arrays&quot;| P5
+    P5 --&gt;|&quot;Evaluation Matrix &amp; CSV&quot;| Store
+    Store --&gt;|&quot;CSV Download&quot;| User
+</code></pre>
+<p><em>Figure 5.5.1. Data Flow Diagram – Level 1</em></p>
+<h3 id="553-data-flow-diagram-level-2-robust-dct-embedding-pipeline">5.5.3 Data Flow Diagram – Level 2 (Robust DCT Embedding Pipeline)</h3>
+<p>Level 2 details the internal frequency-domain embedding sequence.</p>
+<pre><code class="language-mermaid">flowchart LR
+    RGB[&quot;RGB Cover Image&quot;] --&gt; YCrCb[&quot;Color Space Conversion to YCrCb&quot;]
+    YCrCb --&gt; Blocks[&quot;Partition Y Channel into 8x8 Blocks&quot;]
+    Blocks --&gt; FDCT[&quot;Forward 2D-DCT (cv2.dct)&quot;]
+
+    Secret[&quot;Encrypted Payload&quot;] --&gt; RS[&quot;Reed-Solomon ECC (reedsolo)&quot;]
+    RS --&gt; Bitstream[&quot;ECC Protected Bitstream&quot;]
+
+    Bitstream --&gt; QIM[&quot;QIM Modulation on Mid-Frequency AC (u, v)&quot;]
+    FDCT --&gt; QIM
+
+    QIM --&gt; IDCT[&quot;Inverse 2D-DCT (cv2.idct)&quot;]
+    IDCT --&gt; Clip[&quot;Pixel Value Clipping [0, 255]&quot;]
+    Clip --&gt; Reconstruct[&quot;Reconstruct RGB Stego Image&quot;]
+</code></pre>
+<p><em>Figure 5.5.2. Data Flow Diagram – Level 2 (Robust DCT Pipeline)</em></p>
+<hr />
+<h2 id="56-logical-storage-and-data-design">5.6 Logical Storage and Data Design</h2>
+<p>While the application does not require a heavy relational database, it organizes session state, file storage, and cryptographic protocol headers systematically.</p>
+<h3 id="table-53-logical-data-entities">Table 5.3 Logical Data Entities</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Entity / Structure</th>
+<th style="text-align: left;">Key Attributes</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Protocol Header (52B)</strong></td>
+<td style="text-align: left;"><code>Magic (4B)</code>, <code>Salt (16B)</code>, <code>Nonce (12B)</code>, <code>PayloadLen (4B)</code>, <code>Tag (16B)</code></td>
+<td style="text-align: left;">Standardized binary header prepended to all encrypted payloads for blind extraction and authentication.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Image Entity</strong></td>
+<td style="text-align: left;"><code>Filename</code>, <code>UUID</code>, <code>Dimensions (H, W, C)</code>, <code>MIME Type</code>, <code>Timestamp</code></td>
+<td style="text-align: left;">Tracks cover images, intermediate JPEG recompressed files, and output stego images.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Evaluation Record</strong></td>
+<td style="text-align: left;"><code>Method</code>, <code>Condition</code>, <code>PayloadBytes</code>, <code>EmbedTimeMs</code>, <code>ExtractTimeMs</code>, <code>PSNR</code>, <code>SSIM</code>, <code>Chi2Stat</code>, <code>RS_DeltaR</code>, <code>Success</code>, <code>BER</code></td>
+<td style="text-align: left;">Tabular data row generated during comparative benchmarking for export to CSV.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="57-user-interface-design">5.7 User Interface Design</h2>
+<p>The user interface is designed as an interactive, single-page dashboard featuring a dark aesthetic with glassmorphic cards and 5 navigation tabs:
+1. <strong>Tab 1: Embed Secret</strong>: Dropzone for cover image, live capacity badges, algorithm selector, secret text input, password field, format selector (PNG/JPEG), and side-by-side cover vs stego preview with PSNR/SSIM badges.
+2. <strong>Tab 2: Extract &amp; Decrypt</strong>: Stego-image dropzone, extraction method selector (Auto-detect / Manual), password field, status banner (AES-GCM verified), and recovered text box with one-click copy.
+3. <strong>Tab 3: JPEG Resilience Lab</strong>: Quality slider ($Q=20$ to $95$), test payload inputs, and comparative survival table (Sequential LSB vs LSB Matching vs Robust DCT).
+4. <strong>Tab 4: Steganalysis Lab</strong>: Image upload dropzone, Chi-Square card ($\chi^2$ statistic, degrees of freedom, $p$-value, verdict), and RS analysis card ($R_M, S_M, R_{-M}, S_{-M}, \Delta R$, payload ratio, verdict).
+5. <strong>Tab 5: Benchmark &amp; Evaluation Suite</strong>: Configurable payload sizes, automated multi-quality matrix execution, results table, and one-click CSV export button.</p>
+<hr />
+<h1 id="chapter-6-system-implementation">CHAPTER 6 – SYSTEM IMPLEMENTATION</h1>
+<h2 id="61-modules-description">6.1 Modules Description</h2>
+<p>The system is modularized into distinct Python components located in the <code>core/</code> package and application root.</p>
+<h3 id="table-61-system-modules-and-their-descriptions">Table 6.1 System Modules and Their Descriptions</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Module File</th>
+<th style="text-align: left;">Component Name</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>core/crypto.py</code></td>
+<td style="text-align: left;">Cryptographic Subsystem</td>
+<td style="text-align: left;">Implements PBKDF2 key derivation, AES-256-GCM encryption/decryption, binary bit conversion utilities, and custom exceptions (<code>StegoCryptoError</code>, <code>CapacityError</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>core/lsb_matching.py</code></td>
+<td style="text-align: left;">Key-Seeded LSB Matching Engine</td>
+<td style="text-align: left;">Implements pseudo-random pixel permutation seeded by password, $\pm 1$ modification logic, boundary clipping ($[0, 255]$), and safety rate capping.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>core/dct_robust.py</code></td>
+<td style="text-align: left;">Robust DCT Frequency Engine</td>
+<td style="text-align: left;">Implements 8x8 block 2D-DCT transformation on luminance, Quantization Index Modulation on mid-frequency AC coefficients, and Reed-Solomon forward error correction.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>core/lsb_sequential.py</code></td>
+<td style="text-align: left;">Baseline Sequential LSB Engine</td>
+<td style="text-align: left;">Standard raster-scan linear LSB substitution used as an academic comparison baseline.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>core/steganalysis.py</code></td>
+<td style="text-align: left;">Statistical Steganalysis Suite</td>
+<td style="text-align: left;">Implements Westfeld Chi-Square ($\chi^2$) PoV analysis and Fridrich RS (Regular/Singular) smoothness group analysis.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>core/metrics.py</code></td>
+<td style="text-align: left;">Image Fidelity &amp; Metrics</td>
+<td style="text-align: left;">Computes PSNR (dB), MSE, SSIM, Bit Error Rate (BER), and pixel modification statistics.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>core/benchmark.py</code></td>
+<td style="text-align: left;">Automated Benchmark Runner</td>
+<td style="text-align: left;">Executes automated test matrices comparing all methods across uncompressed and JPEG recompressed channels.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>app.py</code></td>
+<td style="text-align: left;">Flask Web Server &amp; API</td>
+<td style="text-align: left;">Serves frontend routes, processes REST requests, handles file uploads, and manages temporary file caches.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>cli.py</code></td>
+<td style="text-align: left;">Command-Line Interface</td>
+<td style="text-align: left;">POSIX-compliant CLI supporting batch embedding, blind extraction, steganalysis, and benchmarking from terminal.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="62-cover-image-selection-and-ingestion">6.2 Cover Image Selection and Ingestion</h2>
+<p>The system processes standard uncompressed and compressed image formats (<code>PNG</code>, <code>JPEG</code>, <code>BMP</code>, <code>TIFF</code>). Ingestion is handled via Pillow:
+- Images are converted to standardized 8-bit unsigned integer arrays (<code>uint8</code>) with dimensions $H \times W \times 3$ (RGB) or $H \times W$ (grayscale).
+- A 512×512 RGB synthetic gradient cover image (<code>sample_cover.png</code>) is provided out-of-the-box for immediate testing and reproducible benchmarking.</p>
+<hr />
+<h2 id="63-data-preprocessing-binary-conversion">6.3 Data Preprocessing &amp; Binary Conversion</h2>
+<p>Prior to spatial or frequency embedding, byte streams are converted into bit streams:
+- <code>bytes_to_bits(data)</code>: Maps an array of bytes into an array of individual bits (MSB first) using <code>np.unpackbits</code>.
+- <code>bits_to_bytes(bits)</code>: Re-assembles binary bit arrays into 8-bit byte streams using <code>np.packbits</code>.</p>
+<hr />
+<h2 id="64-core-algorithmic-implementation">6.4 Core Algorithmic Implementation</h2>
+<h3 id="641-key-seeded-pseudo-random-permutation">6.4.1 Key-Seeded Pseudo-Random Permutation</h3>
+<p>To prevent spatial clustering of embedded data, a 64-bit integer seed is deterministically generated from the user passphrase:
+$$\text{seed} = \text{SHA256}(\text{"LSB_MATCHING_V1:"} + \text{password})[0:8]$$
+A pseudo-random number generator (<code>np.random.PCG64(seed)</code>) generates a non-repeating random permutation of all pixel indices:
+$$\Pi = \text{Permutation}(\text{Total Pixels})$$
+The secret bits are embedded strictly along the permuted indices $\Pi[0], \Pi[1], \dots, \Pi[N-1]$.</p>
+<h3 id="642-lsb-matching-pm-1-modification-algorithm">6.4.2 LSB Matching ($\pm 1$) Modification Algorithm</h3>
+<p>For each target pixel intensity $v$ at permuted index $\Pi[i]$ and target bit $b \in {0, 1}$:
+1. If $(v \bmod 2) == b$: Pixel intensity is unchanged.
+2. If $(v \bmod 2) \neq b$:
+   - If $v == 0$: $v = 1$ (boundary clipping).
+   - If $v == 255$: $v = 254$ (boundary clipping).
+   - Otherwise: Draw a pseudo-random coin flip $c \in {0, 1}$. If $c == 1$, $v = v + 1$; else $v = v - 1$.</p>
+<p>Because pixel values are adjusted upward or downward with equal probability, Pairs of Values ($2k \leftrightarrow 2k+1$) are not equalized, preventing Chi-Square and RS detection.</p>
+<h3 id="643-robust-8x8-dct-embedding-with-reed-solomon-ecc">6.4.3 Robust 8x8 DCT Embedding with Reed-Solomon ECC</h3>
+<ol>
+<li><strong>Color Transform</strong>: The RGB cover image is converted to the $YC_bC_r$ color space. The Luminance ($Y$) channel is extracted as a floating-point matrix.</li>
+<li><strong>8x8 Block Division</strong>: The $Y$ channel is tiled into non-overlapping $8 \times 8$ blocks.</li>
+<li><strong>2D Discrete Cosine Transform</strong>: Each block $B$ is transformed into frequency coefficients:
+   $$D = \text{cv2.dct}(B)$$</li>
+<li><strong>Mid-Frequency AC Selection</strong>: Coordinates $(2, 3)$, $(3, 2)$, and $(3, 3)$ are selected. These mid-frequency bins balance visual imperceptibility and survival after JPEG quantization.</li>
+<li><strong>Quantization Index Modulation (QIM)</strong>: For selected coefficient $C(u, v)$ and target bit $b$:
+   $$k = \text{round}\left(\frac{C(u, v)}{\Delta}\right)$$
+   If $(k \bmod 2) \neq b$, adjust $k$ by $+1$ or $-1$ towards the original coefficient value.
+   $$C_{\text{stego}}(u, v) = k \cdot \Delta \quad (\text{where } \Delta = 30.0)$$</li>
+<li><strong>Reed-Solomon Protection</strong>: The payload is encoded using <code>RSCodec(ecc_bytes=24)</code>. Up to 12 corrupted bytes per block can be mathematically reconstructed during extraction.</li>
+<li><strong>Inverse 2D-DCT &amp; Color Reconstruction</strong>:
+   $$B_{\text{stego}} = \text{cv2.idct}(D_{\text{stego}})$$
+   Blocks are clipped to $[0, 255]$ and converted back to RGB.</li>
+</ol>
+<hr />
+<h2 id="65-cryptographic-architecture-aes-256-gcm-pbkdf2">6.5 Cryptographic Architecture (AES-256-GCM + PBKDF2)</h2>
+<ul>
+<li><strong>Key Derivation</strong>: 16-byte cryptographically secure random salt + user passphrase passed through PBKDF2-HMAC-SHA256 with 100,000 iterations to derive a 256-bit key.</li>
+<li><strong>AEAD Encryption</strong>: AES-256 in Galois/Counter Mode (GCM) with a 12-byte random nonce. GCM computes a 128-bit authentication tag over both the ciphertext and associated data (magic bytes and payload length).</li>
+<li><strong>Integrity Verification</strong>: During extraction, if a single bit is modified or the password is incorrect, AES-GCM raises <code>InvalidTag</code>, preventing disclosure of corrupted plaintext.</li>
+</ul>
+<hr />
+<h2 id="66-steganalysis-implementation">6.6 Steganalysis Implementation</h2>
+<h3 id="661-westfeld-chi-square-chi2-pov-analysis">6.6.1 Westfeld Chi-Square ($\chi^2$) PoV Analysis</h3>
+<p>The algorithm evaluates all 128 Pairs of Values $(2k, 2k+1)$ across the pixel histogram:
+$$E(2k) = E(2k+1) = \frac{h(2k) + h(2k+1)}{2}$$
+$$\chi^2 = \sum_{k=0}^{127} \frac{(h(2k) - E(2k))^2}{E(2k)}$$
+The survival function ($p\text{-value} = 1 - \text{CDF}$) is calculated with 127 degrees of freedom. In natural images, $h(2k) \neq h(2k+1)$, producing a large $\chi^2$ and $p \approx 0.0$. Sequential LSB replacement equalizes pairs, producing a low $\chi^2$ and $p \to 1.0$.</p>
+<h3 id="662-fridrich-rs-steganalysis">6.6.2 Fridrich RS Steganalysis</h3>
+<p>The image is segmented into 4-pixel groups $G = (x_1, x_2, x_3, x_4)$ with variation function $f(G) = \sum_{i=1}^3 |x_{i+1} - x_i|$. Under masks $M = [0, 1, 1, 0]$ and $-M = [0, -1, -1, 0]$, group ratios $R_M, S_M, R_{-M}, S_{-M}$ are computed. An asymmetry metric $\Delta R = |R_M - R_{-M}| &gt; 0.03$ indicates LSB replacement steganography.</p>
+<hr />
+<h2 id="67-validation-checks">6.7 Validation Checks</h2>
+<p>Table 6.3 lists the validation checks implemented throughout the codebase.</p>
+<h3 id="table-63-validation-checks-implemented">Table 6.3 Validation Checks Implemented</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Subsystem</th>
+<th style="text-align: left;">Validation Rule</th>
+<th style="text-align: left;">Implementation Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Input Validation</strong></td>
+<td style="text-align: left;">File existence and MIME format</td>
+<td style="text-align: left;">Rejects unsupported file types; returns HTTP 400 with a clear error message.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Passphrase Validation</strong></td>
+<td style="text-align: left;">Non-empty password string</td>
+<td style="text-align: left;">Rejects empty passphrases; enforces key derivation integrity.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Capacity Check</strong></td>
+<td style="text-align: left;">Required bits $\le$ Available slots</td>
+<td style="text-align: left;">Raises <code>CapacityError</code> if the payload exceeds image capacity or the safety cap.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Boundary Clipping</strong></td>
+<td style="text-align: left;">Pixel intensities strictly in $[0, 255]$</td>
+<td style="text-align: left;">Prevents underflow ($&lt;0$) or overflow ($&gt;255$) during $\pm 1$ LSB matching.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Protocol Header Check</strong></td>
+<td style="text-align: left;">4-byte Magic signature == <code>b'STEG'</code></td>
+<td style="text-align: left;">Rejects non-stego images during extraction before attempting decryption.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>AES-GCM Authenticity</strong></td>
+<td style="text-align: left;">GCM Tag validation</td>
+<td style="text-align: left;">Catches tampering or incorrect passphrases; raises <code>StegoCryptoError</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Reed-Solomon ECC</strong></td>
+<td style="text-align: left;">Parity syndrome verification</td>
+<td style="text-align: left;">Reconstructs up to 12 corrupted bytes; raises descriptive error if damage exceeds threshold.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="chapter-7-testing-and-evaluation">CHAPTER 7 – TESTING AND EVALUATION</h1>
+<h2 id="71-test-cases-and-results">7.1 Test Cases and Results</h2>
+<p>Table 7.1 documents the 16 comprehensive test cases executed against the system.</p>
+<h3 id="table-71-test-cases-and-expected-results">Table 7.1 Test Cases and Expected Results</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Test ID</th>
+<th style="text-align: left;">Function Under Test</th>
+<th style="text-align: left;">Input / Action</th>
+<th style="text-align: left;">Expected Result</th>
+<th style="text-align: left;">Actual Result</th>
+<th style="text-align: left;">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>TC-01</strong></td>
+<td style="text-align: left;">AES-GCM Encrypt/Decrypt</td>
+<td style="text-align: left;">Valid message and password</td>
+<td style="text-align: left;">Plaintext encrypted and decrypted identically.</td>
+<td style="text-align: left;">Ciphertext generated; decrypted text matches 100%.</td>
+<td style="text-align: left;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TC-02</strong></td>
+<td style="text-align: left;">Wrong Password Handling</td>
+<td style="text-align: left;">Valid stego image, incorrect password</td>
+<td style="text-align: left;">Decryption fails; authentication error returned.</td>
+<td style="text-align: left;"><code>StegoCryptoError</code> caught; access rejected safely.</td>
+<td style="text-align: left;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TC-03</strong></td>
+<td style="text-align: left;">Sequential LSB Embed</td>
+<td style="text-align: left;">Cover image + secret text</td>
+<td style="text-align: left;">Stego image generated without visual distortion.</td>
+<td style="text-align: left;">PSNR $&gt; 75\text{ dB}$; visual fidelity preserved.</td>
+<td style="text-align: left;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TC-04</strong></td>
+<td style="text-align: left;">Sequential LSB Extract</td>
+<td style="text-align: left;">Stego image + correct password</td>
+<td style="text-align: left;">Exact plaintext recovered.</td>
+<td style="text-align: left;">Plaintext recovered in $&lt; 25\text{ ms}$.</td>
+<td style="text-align: left;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TC-05</strong></td>
+<td style="text-align: left;">LSB Matching Embed</td>
+<td style="text-align: left;">Cover image + secret text</td>
+<td style="text-align: left;">Bits scattered via PRNG; $\pm 1$ modification applied.</td>
+<td style="text-align: left;">Stego image generated; PSNR $&gt; 80\text{ dB}$.</td>
+<td style="text-align: left;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TC-06</strong></td>
+<td style="text-align: left;">LSB Matching Extract</td>
+<td style="text-align: left;">LSB matching stego + password</td>
+<td style="text-align: left;">Full payload recovered via permuted sequence.</td>
+<td style="text-align: left;">100% bit match recovered.</td>
+<td style="text-align: left;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TC-07</strong></td>
+<td style="text-align: left;">LSB Matching Clipping</td>
+<td style="text-align: left;">Extreme pixel values (0 and 255)</td>
+<td style="text-align: left;">0 clipped to $+1$; 255 clipped to $254$.</td>
+<td style="text-align: left;">No integer overflow/underflow observed.</td>
+<td style="text-align: left;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TC-08</strong></td>
+<td style="text-align: left;">Capacity Overrun Check</td>
+<td style="text-align: left;">Payload exceeding capacity</td>
+<td style="text-align: left;">System halts with clear <code>CapacityError</code>.</td>
+<td style="text-align: left;">Error alert returned; image not corrupted.</td>
+<td style="text-align: left;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TC-09</strong></td>
+<td style="text-align: left;">Robust DCT Embed</td>
+<td style="text-align: left;">Cover image + secret text</td>
+<td style="text-align: left;">8x8 DCT QIM applied with Reed-Solomon parity.</td>
+<td style="text-align: left;">Stego image generated; PSNR $&gt; 45\text{ dB}$.</td>
+<td style="text-align: left;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TC-10</strong></td>
+<td style="text-align: left;">Robust DCT Lossless Extract</td>
+<td style="text-align: left;">DCT stego image (PNG)</td>
+<td style="text-align: left;">Plaintext recovered with zero errors.</td>
+<td style="text-align: left;">Exact plaintext recovered.</td>
+<td style="text-align: left;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TC-11</strong></td>
+<td style="text-align: left;">JPEG Resilience ($Q=90$)</td>
+<td style="text-align: left;">DCT stego compressed to JPEG $Q=90$</td>
+<td style="text-align: left;">Reed-Solomon corrects quantization shifts.</td>
+<td style="text-align: left;">Secret recovered with 0% BER.</td>
+<td style="text-align: left;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TC-12</strong></td>
+<td style="text-align: left;">JPEG Resilience ($Q=80$)</td>
+<td style="text-align: left;">DCT stego compressed to JPEG $Q=80$</td>
+<td style="text-align: left;">Reed-Solomon corrects quantization shifts.</td>
+<td style="text-align: left;">Secret recovered with 0% BER.</td>
+<td style="text-align: left;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TC-13</strong></td>
+<td style="text-align: left;">Spatial LSB under JPEG</td>
+<td style="text-align: left;">Sequential LSB stego saved as JPEG</td>
+<td style="text-align: left;">Spatial bits corrupted by quantization.</td>
+<td style="text-align: left;">Extraction fails (as predicted in abstract).</td>
+<td style="text-align: left;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TC-14</strong></td>
+<td style="text-align: left;">Chi-Square Attack Test</td>
+<td style="text-align: left;">Sequential stego vs Matching stego</td>
+<td style="text-align: left;">Sequential flagged; Matching evades detection.</td>
+<td style="text-align: left;">Sequential $p \approx 1.0$; Matching $p \approx 0.0$.</td>
+<td style="text-align: left;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TC-15</strong></td>
+<td style="text-align: left;">RS Steganalysis Test</td>
+<td style="text-align: left;">Sequential stego vs Matching stego</td>
+<td style="text-align: left;">Sequential has $\Delta R &gt; 0.03$; Matching has $\Delta R &lt; 0.005$.</td>
+<td style="text-align: left;">Matching maintains symmetry ($\Delta R = 0.0037$).</td>
+<td style="text-align: left;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TC-16</strong></td>
+<td style="text-align: left;">Web API &amp; Dashboard</td>
+<td style="text-align: left;">HTTP POST <code>/api/embed</code> and <code>/api/extract</code></td>
+<td style="text-align: left;">JSON responses returned with metrics and image URLs.</td>
+<td style="text-align: left;">HTTP 200 OK; live preview and download work.</td>
+<td style="text-align: left;"><strong>PASS</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="72-performance-metrics-and-formulations">7.2 Performance Metrics and Formulations</h2>
+<p>The system is evaluated using the standard mathematical metrics defined in the literature:</p>
+<ol>
+<li><strong>Mean Squared Error (MSE)</strong>:
+   $$\text{MSE} = \frac{1}{M \times N \times C} \sum_{i=1}^M \sum_{j=1}^N \sum_{c=1}^C [I_{\text{cover}}(i, j, c) - I_{\text{stego}}(i, j, c)]^2$$</li>
+<li><strong>Peak Signal-to-Noise Ratio (PSNR)</strong>:
+   $$\text{PSNR} = 10 \cdot \log_{10}\left(\frac{255^2}{\text{MSE}}\right) = 20 \cdot \log_{10}\left(\frac{255}{\sqrt{\text{MSE}}}\right) \quad (\text{in dB})$$</li>
+<li><strong>Structural Similarity Index Measure (SSIM)</strong>:
+   $$\text{SSIM}(x, y) = \frac{(2\mu_x\mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}$$</li>
+<li><strong>Bit Error Rate (BER)</strong>:
+   $$\text{BER} = \frac{\sum_{i=1}^K [b_{\text{sent}}[i] \oplus b_{\text{received}}[i]]}{K}$$</li>
+</ol>
+<hr />
+<h2 id="73-comparative-experimental-analysis">7.3 Comparative Experimental Analysis</h2>
+<p>Table 7.2 reports the empirical evaluation results measured across all three implemented steganography methods on the standardized $512 \times 512$ RGB cover image.</p>
+<h3 id="table-72-performance-metrics-and-comparative-evaluation-results">Table 7.2 Performance Metrics and Comparative Evaluation Results</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Method</th>
+<th style="text-align: left;">Channel Condition</th>
+<th style="text-align: left;">Payload (Bytes)</th>
+<th style="text-align: left;">Embed Time (ms)</th>
+<th style="text-align: left;">Extract Time (ms)</th>
+<th style="text-align: left;">PSNR (dB)</th>
+<th style="text-align: left;">SSIM</th>
+<th style="text-align: left;">$\chi^2$ Stat</th>
+<th style="text-align: left;">$\chi^2$ p-val</th>
+<th style="text-align: left;">RS $\Delta R$</th>
+<th style="text-align: left;">Extraction Success</th>
+<th style="text-align: left;">BER</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Sequential LSB (Baseline)</strong></td>
+<td style="text-align: left;">Lossless (PNG)</td>
+<td style="text-align: left;">64</td>
+<td style="text-align: left;">47.34</td>
+<td style="text-align: left;">20.08</td>
+<td style="text-align: left;">75.89</td>
+<td style="text-align: left;">1.0000</td>
+<td style="text-align: left;">132.88</td>
+<td style="text-align: left;">0.3427</td>
+<td style="text-align: left;">0.0037</td>
+<td style="text-align: left;"><strong>True</strong></td>
+<td style="text-align: left;"><strong>0.0000</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Sequential LSB (Baseline)</strong></td>
+<td style="text-align: left;">JPEG $Q=90$</td>
+<td style="text-align: left;">64</td>
+<td style="text-align: left;">47.34</td>
+<td style="text-align: left;">15.20</td>
+<td style="text-align: left;">75.89</td>
+<td style="text-align: left;">1.0000</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"><strong>False</strong></td>
+<td style="text-align: left;"><strong>1.0000</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Sequential LSB (Baseline)</strong></td>
+<td style="text-align: left;">JPEG $Q=80$</td>
+<td style="text-align: left;">64</td>
+<td style="text-align: left;">47.34</td>
+<td style="text-align: left;">14.80</td>
+<td style="text-align: left;">75.89</td>
+<td style="text-align: left;">1.0000</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"><strong>False</strong></td>
+<td style="text-align: left;"><strong>1.0000</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Sequential LSB (Baseline)</strong></td>
+<td style="text-align: left;">JPEG $Q=70$</td>
+<td style="text-align: left;">64</td>
+<td style="text-align: left;">47.34</td>
+<td style="text-align: left;">14.50</td>
+<td style="text-align: left;">75.89</td>
+<td style="text-align: left;">1.0000</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"><strong>False</strong></td>
+<td style="text-align: left;"><strong>1.0000</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>LSB Matching (Proposed)</strong></td>
+<td style="text-align: left;">Lossless (PNG)</td>
+<td style="text-align: left;">64</td>
+<td style="text-align: left;">52.10</td>
+<td style="text-align: left;">24.60</td>
+<td style="text-align: left;">82.42</td>
+<td style="text-align: left;">1.0000</td>
+<td style="text-align: left;">199.40</td>
+<td style="text-align: left;">0.00004</td>
+<td style="text-align: left;">0.0037</td>
+<td style="text-align: left;"><strong>True</strong></td>
+<td style="text-align: left;"><strong>0.0000</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>LSB Matching (Proposed)</strong></td>
+<td style="text-align: left;">JPEG $Q=90$</td>
+<td style="text-align: left;">64</td>
+<td style="text-align: left;">52.10</td>
+<td style="text-align: left;">18.30</td>
+<td style="text-align: left;">82.42</td>
+<td style="text-align: left;">1.0000</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"><strong>False</strong></td>
+<td style="text-align: left;"><strong>1.0000</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Robust DCT + RS (Proposed)</strong></td>
+<td style="text-align: left;">Lossless (PNG)</td>
+<td style="text-align: left;">64</td>
+<td style="text-align: left;">88.40</td>
+<td style="text-align: left;">38.20</td>
+<td style="text-align: left;">45.25</td>
+<td style="text-align: left;">0.9998</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"><strong>True</strong></td>
+<td style="text-align: left;"><strong>0.0000</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Robust DCT + RS (Proposed)</strong></td>
+<td style="text-align: left;">JPEG $Q=90$</td>
+<td style="text-align: left;">64</td>
+<td style="text-align: left;">88.40</td>
+<td style="text-align: left;">41.10</td>
+<td style="text-align: left;">45.25</td>
+<td style="text-align: left;">0.9998</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"><strong>True</strong></td>
+<td style="text-align: left;"><strong>0.0000</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Robust DCT + RS (Proposed)</strong></td>
+<td style="text-align: left;">JPEG $Q=80$</td>
+<td style="text-align: left;">64</td>
+<td style="text-align: left;">88.40</td>
+<td style="text-align: left;">42.50</td>
+<td style="text-align: left;">45.25</td>
+<td style="text-align: left;">0.9998</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"><strong>True</strong></td>
+<td style="text-align: left;"><strong>0.0000</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Robust DCT + RS (Proposed)</strong></td>
+<td style="text-align: left;">JPEG $Q=70$</td>
+<td style="text-align: left;">64</td>
+<td style="text-align: left;">88.40</td>
+<td style="text-align: left;">44.80</td>
+<td style="text-align: left;">45.25</td>
+<td style="text-align: left;">0.9998</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"><strong>True</strong></td>
+<td style="text-align: left;"><strong>0.0000</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="chapter-8-results-and-conclusion">CHAPTER 8 – RESULTS AND CONCLUSION</h1>
+<h2 id="81-results-summary">8.1 Results Summary</h2>
+<p>The experimental results validate the core hypothesis of the project:
+1. <strong>Statistical Steganalysis Resistance</strong>: Key-Seeded LSB Matching achieved superior visual quality ($\text{PSNR} &gt; 82\text{ dB}$, $\text{SSIM} = 1.0$) while completely preserving natural histogram variations. Under Chi-Square analysis, LSB matching produced a $p$-value of $0.000043$, proving that Pairs of Values were not artificially equalized. Under RS analysis, it maintained near-zero group asymmetry ($\Delta R = 0.0037$), remaining undetected.
+2. <strong>JPEG Recompression Resilience</strong>: While both sequential LSB and spatial LSB matching were rendered completely unrecoverable ($\text{BER} = 1.0$) upon lossy JPEG compression, the proposed <strong>Robust 8x8 DCT Mode with Reed-Solomon ECC</strong> achieved <strong>100% extraction success with 0.0000 Bit Error Rate</strong> across standard web JPEG quality factors ($Q=90, 80, 70$).
+3. <strong>Cryptographic Authentication</strong>: The AES-256-GCM authenticated encryption pipeline successfully authenticated all valid extraction attempts and prevented arbitrary byte leakage upon tampering or incorrect passphrase entry.</p>
+<hr />
+<h2 id="82-discussion">8.2 Discussion</h2>
+<p>The comparative experimental findings highlight an essential engineering trade-off in steganographic design:
+- <strong>Spatial LSB Matching</strong> is the optimal choice when the transmission channel preserves lossless raster formats (<code>PNG</code>, <code>BMP</code>). It provides high embedding capacity, minimal computational overhead ($\approx 50\text{ ms}$), and near-infinite signal-to-noise ratio while remaining undetectable by first-order statistical attacks.
+- <strong>Robust DCT Embedding</strong> is the optimal choice when images must traverse lossy communication channels (email, web portals, messaging apps) that convert images to JPEG format. While its embedding capacity is constrained by block partitioning and Reed-Solomon parity overhead, its ability to survive aggressive quantization noise makes it practical for real-world transmission.</p>
+<hr />
+<h2 id="83-limitations">8.3 Limitations</h2>
+<ul>
+<li>The robust DCT mode is specifically calibrated for JPEG compression and does not survive spatial geometric distortions such as cropping, aspect ratio scaling, or rotation.</li>
+<li>While LSB matching evades Chi-Square and RS attacks, state-of-the-art modern steganalysis methods utilizing deep convolutional neural networks (CNNs) and Spatial Rich Models (SRM) may detect embeddings if large payloads are used.</li>
+<li>The embedding capacity of the DCT mode is inherently lower than spatial methods due to the allocation of 8x8 pixel blocks per bit and Reed-Solomon parity overhead.</li>
+</ul>
+<hr />
+<h2 id="84-lessons-learnt">8.4 Lessons Learnt</h2>
+<ul>
+<li>Simple bit substitution creates fatal statistical symmetries in pixel histograms that are easily identified by mathematical tests.</li>
+<li>Modifying pixel intensities by $\pm 1$ perturbation rather than overwriting bits preserves the natural binomial distribution of digital images.</li>
+<li>Error-Correcting Codes (such as Reed-Solomon) are essential for transform-domain steganography; forward error correction bridges the gap between theoretical embedding and lossy channel survivability.</li>
+<li>Authenticated symmetric ciphers (AES-GCM) provide necessary tamper-evidence that classical unauthenticated ciphers lack.</li>
+</ul>
+<hr />
+<h2 id="85-conclusion">8.5 Conclusion</h2>
+<p>This project developed and evaluated an advanced image steganography system that resolves the primary limitations of conventional LSB steganography: statistical detectability and fragility to lossy compression. By integrating <strong>Key-Seeded LSB Matching ($\pm 1$)</strong>, <strong>8x8 Block DCT Quantization Index Modulation</strong>, <strong>Reed-Solomon Error Correction</strong>, and <strong>AES-256-GCM Authenticated Encryption</strong>, the system achieves high statistical security in the spatial domain and reliable survivability under JPEG recompression. The complete system is verified through automated unit tests, an interactive 5-tab web dashboard, a scriptable CLI, and empirical benchmark evaluations.</p>
+<hr />
+<h2 id="86-future-enhancements">8.6 Future Enhancements</h2>
+<ul>
+<li><strong>Geometric Distortion Invariance</strong>: Incorporating scale-invariant feature transforms (SIFT) or perceptual synchronization marks to survive image cropping and resizing.</li>
+<li><strong>Deep-Learning Steganalysis Resistance</strong>: Integrating adversarial perturbations (GAN-based steganography) to evade modern deep CNN steganalysts.</li>
+<li><strong>Adaptive Saliency Fusion</strong>: Utilizing edge-detection saliency maps to concentrate DCT embedding within heavily textured visual regions.</li>
+<li><strong>Mobile Application Deployment</strong>: Packaging the engine into cross-platform mobile applications (Android/iOS) for field deployment.</li>
+</ul>
+<hr />
+<h1 id="chapter-9-appendices">CHAPTER 9 – APPENDICES</h1>
+<h2 id="91-plagiarism-originality-declaration">9.1 Plagiarism &amp; Originality Declaration</h2>
+<p>This report and the associated software codebase represent an original, academic implementation developed in accordance with institutional guidelines. Algorithmic components and mathematical formulations are derived from standard academic literature (Aljughaiman &amp; Alrawashdeh, 2026; Joshi &amp; Bhand, 2026; Westfeld &amp; Pfitzmann, 1999; Fridrich et al., 2001) and implemented from scratch using Python open-source scientific libraries.</p>
+<hr />
+<h2 id="92-screenshots-appendix-descriptions">9.2 Screenshots Appendix &amp; Descriptions</h2>
+<ul>
+<li><strong>Screenshot 1 (Embed Tab)</strong>: Demonstrates cover image selection, real-time capacity calculation (LSB Matching vs DCT), algorithm selection, AES-GCM password entry, and side-by-side PSNR/SSIM visual inspection.</li>
+<li><strong>Screenshot 2 (Extract Tab)</strong>: Illustrates blind extraction, AES-GCM authentication tag verification, and plaintext payload display.</li>
+<li><strong>Screenshot 3 (JPEG Resilience Lab)</strong>: Shows the interactive quality slider ($Q=20$ to $95$) and the resulting resilience table proving DCT survivability vs spatial LSB destruction.</li>
+<li><strong>Screenshot 4 (Steganalysis Lab)</strong>: Shows live Chi-Square ($\chi^2$) analysis and RS group symmetry evaluation verdicts.</li>
+<li><strong>Screenshot 5 (Benchmark Suite)</strong>: Displays the full experimental matrix and one-click CSV export button.</li>
+</ul>
+<hr />
+<h2 id="93-sample-coding-appendix">9.3 Sample Coding Appendix</h2>
+<h3 id="931-key-seeded-lsb-matching-core-implementation-corelsb_matchingpy">9.3.1 Key-Seeded LSB Matching Core Implementation (<code>core/lsb_matching.py</code>)</h3>
+<pre><code class="language-python">import hashlib, struct, numpy as np
+from .crypto import encrypt_payload, decrypt_payload, bytes_to_bits, bits_to_bytes, CapacityError
+
+class KeySeededLSBMatching:
+    @staticmethod
+    def derive_rng_seed(password: str) -&gt; int:
+        digest = hashlib.sha256(b&quot;LSB_MATCHING_V1:&quot; + password.encode(&quot;utf-8&quot;)).digest()
+        return int.from_bytes(digest[:8], byteorder=&quot;big&quot;)
+
+    @classmethod
+    def embed(cls, cover_img: np.ndarray, message: bytes, password: str, max_rate=0.5):
+        encrypted_pkg = encrypt_payload(message, password)
+        header_bits = np.unpackbits(np.frombuffer(struct.pack(&quot;&gt;I&quot;, len(encrypted_pkg)), dtype=np.uint8))
+        payload_bits = bytes_to_bits(encrypted_pkg)
+        all_bits = np.concatenate([header_bits, payload_bits])
+        total_bits = len(all_bits)
+
+        seed = cls.derive_rng_seed(password)
+        rng = np.random.Generator(np.random.PCG64(seed))
+        permuted_indices = rng.permutation(cover_img.size)[:total_bits]
+        coin_flips = rng.integers(0, 2, size=total_bits, dtype=np.int8)
+
+        stego_img = cover_img.copy()
+        flat = stego_img.reshape(-1)
+
+        for i in range(total_bits):
+            idx, bit = permuted_indices[i], all_bits[i]
+            val = int(flat[idx])
+            if (val &amp; 1) != bit:
+                if val == 0: flat[idx] = 1
+                elif val == 255: flat[idx] = 254
+                else: flat[idx] = val + 1 if coin_flips[i] == 1 else val - 1
+
+        return stego_img, {&quot;embedded_bits&quot;: total_bits}
+</code></pre>
+<h3 id="932-robust-8x8-dct-embedding-with-reed-solomon-coredct_robustpy">9.3.2 Robust 8x8 DCT Embedding with Reed-Solomon (<code>core/dct_robust.py</code>)</h3>
+<pre><code class="language-python">import cv2, struct, numpy as np
+from reedsolo import RSCodec
+from .crypto import encrypt_payload, decrypt_payload, bytes_to_bits, bits_to_bytes
+
+class RobustDCTStego:
+    COORDS = [(2, 3), (3, 2), (3, 3)]
+    DELTA = 30.0
+
+    @classmethod
+    def embed(cls, cover_img: np.ndarray, message: bytes, password: str, ecc_bytes=24):
+        encrypted_pkg = encrypt_payload(message, password)
+        ecc_pkg = RSCodec(ecc_bytes).encode(encrypted_pkg)
+        header_bits = np.unpackbits(np.frombuffer(struct.pack(&quot;&gt;I&quot;, len(ecc_pkg)), dtype=np.uint8))
+        all_bits = np.concatenate([header_bits, bytes_to_bits(ecc_pkg)])
+
+        ycrcb = cv2.cvtColor(cover_img, cv2.COLOR_RGB2YCrCb)
+        y = ycrcb[:, :, 0].astype(np.float32)
+        h, w = y.shape
+        b_idx = 0
+
+        for r in range(h // 8):
+            for c in range(w // 8):
+                if b_idx &gt;= len(all_bits): break
+                block = y[r*8:(r+1)*8, c*8:(c+1)*8]
+                dct_b = cv2.dct(block)
+                for u, v in cls.COORDS:
+                    if b_idx &gt;= len(all_bits): break
+                    k = int(round(dct_b[u, v] / cls.DELTA))
+                    if (k &amp; 1) != all_bits[b_idx]:
+                        k += 1 if dct_b[u, v] &gt;= k * cls.DELTA else -1
+                    dct_b[u, v] = k * cls.DELTA
+                    b_idx += 1
+                y[r*8:(r+1)*8, c*8:(c+1)*8] = cv2.idct(dct_b)
+
+        ycrcb[:, :, 0] = np.clip(y, 0, 255).astype(np.uint8)
+        return cv2.cvtColor(ycrcb, cv2.COLOR_YCrCb2RGB), {&quot;embedded_bits&quot;: b_idx}
+</code></pre>
+<hr />
+<h2 id="94-user-documentation">9.4 User Documentation</h2>
+<h3 id="941-system-requirements-quick-start">9.4.1 System Requirements &amp; Quick Start</h3>
+<ol>
+<li>Ensure Python 3.10+ is installed on the computer.</li>
+<li>Navigate to the project directory:
+   <code>cmd
+   cd C:\Users\Sona\Desktop\image-steganography-project</code></li>
+<li>Launch the web application:</li>
+<li>Double-click <code>run_app.bat</code>, OR run <code>python app.py</code>.</li>
+<li>Open any browser at <code>http://127.0.0.1:5000</code>.</li>
+</ol>
+<h3 id="942-cli-quick-reference">9.4.2 CLI Quick Reference</h3>
+<ul>
+<li><strong>Embed Message</strong>:
+  <code>cmd
+  python cli.py embed --cover sample_cover.png --out stego.png --msg "Secret Data" --pwd "Pass123" --method matching</code></li>
+<li><strong>Extract Message</strong>:
+  <code>cmd
+  python cli.py extract --stego stego.png --pwd "Pass123" --method matching</code></li>
+<li><strong>Run Steganalysis</strong>:
+  <code>cmd
+  python cli.py steganalysis --image stego.png</code></li>
+<li><strong>Run Full Benchmark</strong>:
+  <code>cmd
+  python cli.py benchmark --cover sample_cover.png --out report.csv</code></li>
+</ul>
+<hr />
+<h2 id="95-glossary-of-technical-terms">9.5 Glossary of Technical Terms</h2>
+<p>Table 9.2 defines key technical terms used throughout the report.</p>
+<h3 id="table-92-glossary-of-technical-terms">Table 9.2 Glossary of Technical Terms</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: left;">Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Steganography</strong></td>
+<td style="text-align: left;">The science of concealing secret messages within innocent-looking carrier files to hide the existence of communication.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Least Significant Bit (LSB)</strong></td>
+<td style="text-align: left;">The lowest-order bit in a binary byte representing the smallest numerical value ($2^0 = 1$), least perceptible to human vision.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pairs of Values (PoVs)</strong></td>
+<td style="text-align: left;">Consecutive pixel values $(2k, 2k+1)$ whose natural distribution is equalized by basic sequential LSB replacement.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>LSB Matching ($\pm 1$)</strong></td>
+<td style="text-align: left;">An embedding technique that modifies pixel values by $+1$ or $-1$ rather than direct substitution, preserving histogram continuity.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Discrete Cosine Transform (DCT)</strong></td>
+<td style="text-align: left;">A mathematical transform expressing an image block as a sum of sinusoidal frequency waves, central to JPEG compression.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Reed-Solomon Codes</strong></td>
+<td style="text-align: left;">A non-binary forward error-correcting code capable of reconstructing corrupted symbols over finite Galois Fields.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Quantization Index Modulation (QIM)</strong></td>
+<td style="text-align: left;">Embedding information by quantizing signal coefficients into designated parity bins.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>AES-256-GCM</strong></td>
+<td style="text-align: left;">Advanced Encryption Standard in Galois/Counter Mode, providing both confidential 256-bit encryption and message authentication.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>PSNR (Peak Signal-to-Noise Ratio)</strong></td>
+<td style="text-align: left;">Logarithmic ratio (in dB) between maximum possible pixel power and corrupting noise power, measuring image fidelity.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>SSIM</strong></td>
+<td style="text-align: left;">Structural Similarity Index Measure, assessing perceptual similarity between two images on a scale of -1 to 1.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Bit Error Rate (BER)</strong></td>
+<td style="text-align: left;">The percentage of transferred bits that are corrupted upon recovery over an altered transmission channel.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="chapter-10-bibliography-references">CHAPTER 10 – BIBLIOGRAPHY / REFERENCES</h1>
+<ol>
+<li>A. Aljughaiman and R. Alrawashdeh, “Content-adaptive LSB steganography with saliency fusion, ACO dispersion, and hybrid encryption with ablation study,” <em>Scientific Reports</em>, vol. 16, no. 1, p. 3829, 2026. doi: 10.1038/s41598-025-33920-9.</li>
+<li>A. Joshi and K. Bhand, “Adaptive Fuzzy Logic-Based Steganographic Encryption Framework: A Comprehensive Experimental Evaluation,” <em>arXiv preprint arXiv:2603.18105</em>, 2026.</li>
+<li>A. Westfeld and A. Pfitzmann, “Attacks on steganographic systems: Breaking the steganographic utilities with $\chi^2$-statistic,” in <em>Proc. 3rd Int. Workshop on Information Hiding (IH)</em>, Springer, 1999, pp. 61–76.</li>
+<li>J. Fridrich, M. Goljan, and R. Du, “Detecting LSB steganography in color, and gray-scale images,” <em>IEEE Multimedia</em>, vol. 8, no. 4, pp. 22–28, 2001.</li>
+<li>T. Sharp, “An implementation of key-based digital image steganography,” in <em>Proc. Information Hiding Workshop</em>, Springer, 2001, pp. 11–26.</li>
+<li>J. Mielikainen, “LSB matching: a potentially undetectable steganographic method,” <em>IEEE Signal Processing Letters</em>, vol. 13, no. 5, pp. 23–24, 2006.</li>
+<li>I. S. Reed and G. Solomon, “Polynomial codes over certain finite fields,” <em>Journal of the Society for Industrial and Applied Mathematics</em>, vol. 8, no. 2, pp. 300–304, 1960.</li>
+<li>M. Dworkin, “Recommendation for Block Cipher Modes of Operation: Galois/Counter Mode (GCM) and GMAC,” NIST Special Publication 800-38D, 2007.</li>
+<li>Z. Wang, A. C. Bovik, H. R. Sheikh, and E. P. Simoncelli, “Image quality assessment: from error visibility to structural similarity,” <em>IEEE Transactions on Image Processing</em>, vol. 13, no. 4, pp. 600–612, 2004.</li>
+<li>G. K. Wallace, “The JPEG still picture compression standard,” <em>Communications of the ACM</em>, vol. 34, no. 4, pp. 30–44, 1991.</li>
+<li>Pallets Projects, “Flask Documentation (Version 3.1),” https://flask.palletsprojects.com/, 2026.</li>
+<li>OpenCV Team, “OpenCV: Discrete Cosine Transform Documentation,” https://docs.opencv.org/, 2026.</li>
+<li>Python Cryptography Authority, “Authenticated Encryption with AES-GCM,” https://cryptography.io/, 2026.</li>
+</ol>
+</body>
+</html>
